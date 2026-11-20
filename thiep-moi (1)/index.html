@@ -1,0 +1,3172 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THE FINAL EXPERIMENT | KỶ YẾU 2026 – THPT Cẩm Lí</title>
+
+  <!-- Google Fonts: Pixel Display + Modern Editorial Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            pixel: ['"Silkscreen"', 'monospace'],
+            vt: ['"VT323"', 'monospace'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            midnight: '#070B19',
+            abyss: '#0D1326',
+            emeraldVoxel: '#10B981',
+            cyanPotion: '#22D3EE',
+            purpleEnchant: '#A855F7',
+            goldChest: '#FBBF24',
+            warmWhite: '#F8FAFC',
+          },
+          boxShadow: {
+            'voxel-emerald': '0 4px 0 #065F46, 0 12px 24px -4px rgba(16, 185, 129, 0.35)',
+            'voxel-gold': '0 4px 0 #92400E, 0 12px 24px -4px rgba(251, 191, 36, 0.35)',
+            'voxel-purple': '0 4px 0 #581C87, 0 12px 24px -4px rgba(168, 85, 247, 0.35)',
+            'voxel-cyan': '0 4px 0 #155E75, 0 12px 24px -4px rgba(34, 211, 238, 0.35)',
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- React 18 & ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <!-- Babel Standalone for JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Three.js r128 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    :root {
+      --bg-midnight: #070B19;
+      --emerald: #10B981;
+      --cyan: #22D3EE;
+      --purple: #A855F7;
+      --gold: #FBBF24;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #070B19;
+      color: #F8FAFC;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070B19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1E293B;
+      border-radius: 4px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #10B981;
+    }
+
+    .voxel-panel {
+      background: rgba(13, 19, 38, 0.78);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .voxel-btn {
+      position: relative;
+      transition: transform 0.12s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.12s ease, filter 0.15s ease;
+      user-select: none;
+    }
+    .voxel-btn:active {
+      transform: translateY(3px);
+    }
+
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    .animate-float-slow {
+      animation: floatSlow 4.5s ease-in-out infinite;
+    }
+
+    @keyframes digitPop {
+      0% { transform: scale(1.16); color: #FBBF24; }
+      100% { transform: scale(1); }
+    }
+    .digit-pop {
+      animation: digitPop 0.35s ease-out;
+    }
+
+    /* Minecraft Book & Quill Parchment Texture */
+    .minecraft-parchment {
+      background-color: #F6ECCE;
+      background-image:
+        radial-gradient(rgba(139, 94, 52, 0.07) 1px, transparent 0),
+        linear-gradient(180deg, rgba(255, 251, 240, 0.85) 0%, rgba(238, 220, 184, 0.85) 100%);
+      background-size: 16px 16px, 100% 100%;
+      color: #2B1D0E;
+    }
+
+    .chapter-bg-1 {
+      background: radial-gradient(circle at 20% 20%, rgba(251, 191, 36, 0.14), transparent 55%),
+                  radial-gradient(circle at 80% 40%, rgba(244, 114, 182, 0.10), transparent 50%);
+    }
+    .chapter-bg-2 {
+      background: radial-gradient(circle at 30% 20%, rgba(16, 185, 129, 0.15), transparent 55%),
+                  radial-gradient(circle at 75% 60%, rgba(52, 211, 153, 0.10), transparent 50%);
+    }
+    .chapter-bg-3 {
+      background: radial-gradient(circle at 25% 25%, rgba(245, 158, 11, 0.18), transparent 55%),
+                  radial-gradient(circle at 80% 30%, rgba(251, 146, 60, 0.12), transparent 50%);
+    }
+    .chapter-bg-4 {
+      background: radial-gradient(circle at 50% 20%, rgba(99, 102, 241, 0.18), transparent 55%),
+                  radial-gradient(circle at 25% 70%, rgba(251, 191, 36, 0.12), transparent 50%);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useCallback } = React;
+
+    // =========================================================================
+    // 1. CENTRALIZED CONFIGURATION
+    // =========================================================================
+    const INVITATION_CONFIG = {
+      eventName: "KỶ YẾU 2026",
+      projectName: "THE FINAL EXPERIMENT",
+      subtitle: "A SPECIAL YEARBOOK INVITATION",
+      tagline: "A journey worth remembering.",
+      thermiteQuote: "Không phải sinh ra đã rực rỡ, có những thứ phải trải qua chuyển hóa mới tạo nên giá trị.",
+      postBurnQuote: "Không phải thứ gì sinh ra cũng đã rực rỡ, có những thứ phải trải qua chuyển hóa mới tạo nên giá trị",
+      thermiteEquation: "2Al + Fe₂O₃ → Al₂O₃ + 2Fe (t°)",
+      organizer: "Nguyễn Phi Hùng",
+      dateDisplay: "29/11/2026",
+      dateDots: "29.11.2026",
+      location: "THPT Cẩm Lí",
+      phone: "0973539769",
+      startTime: "07:30",
+      endTime: "19:30",
+      targetStartISO: "2026-11-29T07:30:00+07:00",
+      targetEndISO: "2026-11-29T19:30:00+07:00",
+      message: [
+        "Một ngày để lưu giữ thanh xuân.",
+        "Một hành trình để nhớ mãi.",
+        "Và những khoảnh khắc chúng ta sẽ không bao giờ muốn quên."
+      ],
+      chapters: [
+        {
+          id: "chapter-1",
+          code: "CHAPTER 01",
+          title: "THE BEGINNING",
+          timeRange: "07:30 – 11:30",
+          costume: "BUỔI SÁNG – ÁO DÀI + VEST + CỬ NHÂN",
+          themeClass: "chapter-bg-1",
+          accent: "amber",
+          visualNote: "Bình minh, sân trường, ánh sáng vàng và camera flash.",
+          events: [
+            { time: "07:30", desc: "Học sinh có mặt tại trường hoặc Địa điểm 2." },
+            { time: "07:30 – 08:00", desc: "Chụp ảnh tập thể." },
+            { time: "08:00 – 09:00", desc: "Chụp ảnh đơn, đôi, nhóm." },
+            { time: "09:00 – 10:30", desc: "Chụp ảnh với gia đình, bạn bè." },
+            { time: "10:30 – 11:30", desc: "Chụp ảnh tập thể." }
+          ]
+        },
+        {
+          id: "chapter-2",
+          code: "CHAPTER 02",
+          title: "A LITTLE BREAK",
+          timeRange: "11:30 – 13:30",
+          costume: "BUỔI TRƯA – NGHỈ NGƠI & CHUẨN BỊ",
+          themeClass: "chapter-bg-2",
+          accent: "emerald",
+          visualNote: "Ánh nắng, lá cây và chuyển động nhẹ nhàng.",
+          events: [
+            { time: "11:30 – 13:30", desc: "Nghỉ ngơi, ăn uống và thay trang phục concept Thanh xuân." }
+          ]
+        },
+        {
+          id: "chapter-3",
+          code: "CHAPTER 03",
+          title: "THE GOLDEN YOUTH",
+          timeRange: "14:00 – 17:30",
+          costume: "BUỔI CHIỀU – THANH XUÂN",
+          themeClass: "chapter-bg-3",
+          accent: "orange",
+          visualNote: "Golden hour, lá bay, ánh sáng vàng, cinematic photography và cảm xúc hoài niệm.",
+          events: [
+            { time: "14:00 – 15:00", desc: "Chụp concept Thanh xuân." },
+            { time: "15:00 – 17:30", desc: "Tiếp tục chụp concept Thanh xuân." }
+          ]
+        },
+        {
+          id: "chapter-4",
+          code: "CHAPTER 04",
+          title: "THE LAST NIGHT",
+          timeRange: "17:30 – 19:30",
+          costume: "BUỔI TỐI – TÂM SỰ",
+          themeClass: "chapter-bg-4",
+          accent: "indigo",
+          visualNote: "Bầu trời xanh đậm, đèn vàng, đom đóm và ánh sao.",
+          events: [
+            { time: "17:30 – 19:30", desc: "Chụp concept tối tâm sự." }
+          ]
+        }
+      ],
+      finalMoment: {
+        code: "FINAL MOMENT",
+        time: "19:30",
+        title: "KẾT THÚC HÀNH TRÌNH",
+        desc: "Cả lớp nghỉ ngơi, di chuyển trở về; ekip chuẩn bị ra về.",
+        visualNote: "Camera từ từ lùi xa, ánh sáng mờ dần."
+      },
+      gallerySlots: [
+        {
+          id: "slot-01a",
+          chapterId: "01",
+          chapterLabel: "01 - CLASS MEMORIES",
+          code: "01",
+          title: "Sân Trường Bình Minh – THPT Cẩm Lí",
+          desc: "Khoảnh khắc áo dài trắng, vest lịch lãm và lễ phục buổi sớm.",
+          accentHex: "#10B981"
+        },
+        {
+          id: "slot-01b",
+          chapterId: "01",
+          chapterLabel: "01 - CLASS MEMORIES",
+          code: "01",
+          title: "Đội Hình Tập Thể Khóa 2026",
+          desc: "Nụ cười rạng rỡ của cả tập thể trong khung hình kỷ yếu.",
+          accentHex: "#34D399"
+        },
+        {
+          id: "slot-02a",
+          chapterId: "02",
+          chapterLabel: "02 - FAMILY & FRIENDS",
+          code: "02",
+          title: "Gia Đình & Những Người Bạn Thân",
+          desc: "Những cái ôm ấm áp cùng gia đình và hội bạn thân trên sân trường.",
+          accentHex: "#22D3EE"
+        },
+        {
+          id: "slot-02b",
+          chapterId: "02",
+          chapterLabel: "02 - FAMILY & FRIENDS",
+          code: "02",
+          title: "Góc Nhỏ Kỷ Niệm Lớp Học",
+          desc: "Những tấm ảnh đơn, đôi và nhóm lưu giữ trọn vẹn cảm xúc.",
+          accentHex: "#38BDF8"
+        },
+        {
+          id: "slot-03a",
+          chapterId: "03",
+          chapterLabel: "03 - THE GOLDEN YOUTH",
+          code: "03",
+          title: "Nắng Chiều Thanh Xuân",
+          desc: "Sắc vàng Golden Hour từ 14:00 – 17:30 với trang phục thanh xuân.",
+          accentHex: "#FBBF24"
+        },
+        {
+          id: "slot-03b",
+          chapterId: "03",
+          chapterLabel: "03 - THE GOLDEN YOUTH",
+          code: "03",
+          title: "Chạy Đua Cùng Hoàng Hôn",
+          desc: "Tự do, phóng khoáng và tràn đầy năng lượng tuổi mười tám.",
+          accentHex: "#F59E0B"
+        },
+        {
+          id: "slot-04a",
+          chapterId: "04",
+          chapterLabel: "04 - LAST NIGHT",
+          code: "04",
+          title: "Đêm Tâm Sự Dưới Ánh Đèn Vàng",
+          desc: "Không gian lắng đọng từ 17:30 – 19:30 với ánh đèn và sao đêm.",
+          accentHex: "#A855F7"
+        },
+        {
+          id: "slot-04b",
+          chapterId: "04",
+          chapterLabel: "04 - LAST NIGHT",
+          code: "04",
+          title: "Lời Hứa Cho Ngày Mai",
+          desc: "Khép lại hành trình 29/11/2026 bằng những ký ức khó phai.",
+          accentHex: "#C084FC"
+        }
+      ]
+    };
+
+    // =========================================================================
+    // 2. WEB AUDIO API SYNTHESIZED SOUND & CUSTOM MP3 MUSIC ENGINE
+    // =========================================================================
+    class VoxelAudioManager {
+      constructor() {
+        this.ctx = null;
+        this.masterGain = null;
+        this.musicGain = null;
+        this.sfxGain = null;
+        this.isPlaying = false;
+        this.isMuted = false;
+        this.volume = 0.55;
+        this.musicTimer = null;
+        this.stepIndex = 0;
+
+        // Custom MP3 support
+        // Nhạc mặc định: file assets/music.mp3 đi kèm cùng thư mục
+        this.customAudio = new Audio("assets/music.mp3");
+        this.customAudio.loop = true;
+        this.customAudio.preload = "auto";
+        this.customAudioUrl = null;
+        this.trackName = "Gửi em, người bất tử – Ân Ngờ ft. Mỹ Mỹ";
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (!AudioCtx) return;
+          this.ctx = new AudioCtx();
+
+          this.masterGain = this.ctx.createGain();
+          this.masterGain.gain.value = this.isMuted ? 0 : this.volume;
+          this.masterGain.connect(this.ctx.destination);
+
+          this.musicGain = this.ctx.createGain();
+          this.musicGain.gain.value = 0.38;
+          this.musicGain.connect(this.masterGain);
+
+          this.sfxGain = this.ctx.createGain();
+          this.sfxGain.gain.value = 0.65;
+          this.sfxGain.connect(this.masterGain);
+        }
+        if (this.ctx && this.ctx.state === "suspended") {
+          this.ctx.resume();
+        }
+      }
+
+      setCustomTrack(file) {
+        if (!file) return;
+        this.stopMusic();
+
+        if (this.customAudio) {
+          this.customAudio.pause();
+          this.customAudio.src = "";
+        }
+        if (this.customAudioUrl) {
+          URL.revokeObjectURL(this.customAudioUrl);
+        }
+
+        const url = URL.createObjectURL(file);
+        this.customAudioUrl = url;
+        this.trackName = file.name.replace(/\.[^/.]+$/, "");
+
+        const audio = new Audio(url);
+        audio.loop = true;
+        audio.volume = this.isMuted ? 0 : this.volume;
+        this.customAudio = audio;
+
+        this.startMusic();
+      }
+
+      setVolume(val) {
+        this.volume = Math.max(0, Math.min(1, val));
+        if (this.masterGain && !this.isMuted && this.ctx) {
+          this.masterGain.gain.setTargetAtTime(this.volume, this.ctx.currentTime, 0.05);
+        }
+        if (this.customAudio) {
+          this.customAudio.volume = this.isMuted ? 0 : this.volume;
+        }
+      }
+
+      toggleMute() {
+        this.isMuted = !this.isMuted;
+        if (this.masterGain && this.ctx) {
+          this.masterGain.gain.setTargetAtTime(this.isMuted ? 0 : this.volume, this.ctx.currentTime, 0.05);
+        }
+        if (this.customAudio) {
+          this.customAudio.volume = this.isMuted ? 0 : this.volume;
+        }
+        return this.isMuted;
+      }
+
+      startMusic() {
+        // Nếu người dùng đã tải file MP3 riêng lên thì phát MP3 đó
+        if (this.customAudio) {
+          this.customAudio.volume = this.isMuted ? 0 : this.volume;
+          this.customAudio.play().catch((e) => console.warn("Audio play blocked:", e));
+          this.isPlaying = true;
+          return;
+        }
+
+        // Nhạc nền mặc định mới: Giai điệu Piano điện ấm áp & hoài niệm (Fmaj7 -> Em7 -> Dm7 -> Cmaj7)
+        this.init();
+        if (!this.ctx || this.isPlaying) return;
+        this.isPlaying = true;
+
+        const leadMelody = [
+          659.25, 587.33, 523.25, 440.00, // E5 - D5 - C5 - A4
+          392.00, 440.00, 523.25, 587.33, // G4 - A4 - C5 - D5
+          493.88, 440.00, 392.00, 329.63, // B4 - A4 - G4 - E4
+          293.66, 329.63, 392.00, 523.25  // D4 - E4 - G4 - C5
+        ];
+
+        const bassChords = [
+          [174.61, 220.00, 261.63], // Fmaj
+          [164.81, 196.00, 246.94], // Em
+          [146.83, 174.61, 220.00], // Dm
+          [130.81, 196.00, 246.94]  // Cmaj7
+        ];
+
+        const playStep = () => {
+          if (!this.isPlaying || !this.ctx || this.customAudio) return;
+          const now = this.ctx.currentTime;
+          const idx = this.stepIndex % leadMelody.length;
+          const freq = leadMelody[idx];
+
+          // 1. Soft Electric Piano Lead (Triangle + Sine harmonic)
+          const osc = this.ctx.createOscillator();
+          const subOsc = this.ctx.createOscillator();
+          const noteGain = this.ctx.createGain();
+
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(freq, now);
+
+          subOsc.type = "sine";
+          subOsc.frequency.setValueAtTime(freq * 2, now);
+
+          const subGain = this.ctx.createGain();
+          subGain.gain.value = 0.14;
+
+          noteGain.gain.setValueAtTime(0.0001, now);
+          noteGain.gain.linearRampToValueAtTime(0.16, now + 0.05);
+          noteGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.3);
+
+          osc.connect(noteGain);
+          subOsc.connect(subGain);
+          subGain.connect(noteGain);
+          noteGain.connect(this.musicGain);
+
+          osc.start(now);
+          subOsc.start(now);
+          osc.stop(now + 2.4);
+          subOsc.stop(now + 2.4);
+
+          // 2. Warm Ambient Chord Pad mỗi 4 nhịp
+          if (idx % 4 === 0) {
+            const chord = bassChords[Math.floor(idx / 4) % bassChords.length];
+            chord.forEach((chordFreq) => {
+              const padOsc = this.ctx.createOscillator();
+              const padGain = this.ctx.createGain();
+              padOsc.type = "sine";
+              padOsc.frequency.setValueAtTime(chordFreq, now);
+
+              padGain.gain.setValueAtTime(0.0001, now);
+              padGain.gain.linearRampToValueAtTime(0.065, now + 0.65);
+              padGain.gain.exponentialRampToValueAtTime(0.0001, now + 4.4);
+
+              padOsc.connect(padGain);
+              padGain.connect(this.musicGain);
+              padOsc.start(now);
+              padOsc.stop(now + 4.5);
+            });
+          }
+
+          this.stepIndex++;
+          this.musicTimer = setTimeout(playStep, 1050);
+        };
+
+        playStep();
+      }
+
+      stopMusic() {
+        this.isPlaying = false;
+        if (this.musicTimer) {
+          clearTimeout(this.musicTimer);
+          this.musicTimer = null;
+        }
+        if (this.customAudio) {
+          this.customAudio.pause();
+        }
+      }
+
+      toggleMusic() {
+        if (this.isPlaying) {
+          this.stopMusic();
+        } else {
+          this.startMusic();
+        }
+        return this.isPlaying;
+      }
+
+      playClick() {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = "square";
+        osc.frequency.setValueAtTime(620, now);
+        osc.frequency.exponentialRampToValueAtTime(280, now + 0.06);
+        gain.gain.setValueAtTime(0.16, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.065);
+        osc.connect(gain);
+        gain.connect(this.sfxGain);
+        osc.start(now);
+        osc.stop(now + 0.07);
+      }
+
+      playCollect(pitchStep = 0) {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const baseFreq = 587.33 * Math.pow(1.12, pitchStep);
+        [baseFreq, baseFreq * 1.5].forEach((f, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(f, now + idx * 0.07);
+          gain.gain.setValueAtTime(0.22, now + idx * 0.07);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.28);
+          osc.connect(gain);
+          gain.connect(this.sfxGain);
+          osc.start(now + idx * 0.07);
+          osc.stop(now + idx * 0.07 + 0.3);
+        });
+      }
+
+      playCraft() {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+
+        const bufferSize = Math.floor(this.ctx.sampleRate * 1.1);
+        const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = (Math.random() * 2 - 1) * Math.sin((i / bufferSize) * Math.PI);
+        }
+        const roar = this.ctx.createBufferSource();
+        roar.buffer = noiseBuffer;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = "bandpass";
+        filter.frequency.setValueAtTime(320, now);
+        filter.frequency.exponentialRampToValueAtTime(1450, now + 0.45);
+        filter.frequency.exponentialRampToValueAtTime(420, now + 1.05);
+
+        const roarGain = this.ctx.createGain();
+        roarGain.gain.setValueAtTime(0.01, now);
+        roarGain.gain.linearRampToValueAtTime(0.32, now + 0.2);
+        roarGain.gain.exponentialRampToValueAtTime(0.001, now + 1.08);
+
+        roar.connect(filter);
+        filter.connect(roarGain);
+        roarGain.connect(this.sfxGain);
+        roar.start(now);
+
+        const notes = [440, 554.37, 659.25, 880, 1108.73, 1318.51];
+        notes.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, now + 0.18 + idx * 0.09);
+          gain.gain.setValueAtTime(0.001, now + 0.18 + idx * 0.09);
+          gain.gain.linearRampToValueAtTime(0.24, now + 0.18 + idx * 0.09 + 0.03);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18 + idx * 0.09 + 0.65);
+          osc.connect(gain);
+          gain.connect(this.sfxGain);
+          osc.start(now + 0.18 + idx * 0.09);
+          osc.stop(now + 0.18 + idx * 0.09 + 0.7);
+        });
+      }
+
+      playChestOpen() {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const creak = this.ctx.createOscillator();
+        const creakGain = this.ctx.createGain();
+        creak.type = "sawtooth";
+        creak.frequency.setValueAtTime(140, now);
+        creak.frequency.linearRampToValueAtTime(240, now + 0.28);
+        creakGain.gain.setValueAtTime(0.14, now);
+        creakGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        creak.connect(creakGain);
+        creakGain.connect(this.sfxGain);
+        creak.start(now);
+        creak.stop(now + 0.32);
+
+        const chord = [523.25, 659.25, 783.99, 1046.50];
+        chord.forEach((f, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(f, now + 0.22 + i * 0.05);
+          gain.gain.setValueAtTime(0.2, now + 0.22 + i * 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+          osc.connect(gain);
+          gain.connect(this.sfxGain);
+          osc.start(now + 0.22 + i * 0.05);
+          osc.stop(now + 1.25);
+        });
+      }
+
+      playPageFlip() {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(320, now);
+        osc.frequency.exponentialRampToValueAtTime(780, now + 0.11);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.13);
+        osc.connect(gain);
+        gain.connect(this.sfxGain);
+        osc.start(now);
+        osc.stop(now + 0.14);
+      }
+
+      playFirework() {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        [0, 0.25, 0.5].forEach((offset, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(523.25 + idx * 130, now + offset);
+          osc.frequency.exponentialRampToValueAtTime(1046.5 + idx * 200, now + offset + 0.25);
+          gain.gain.setValueAtTime(0.22, now + offset);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.45);
+          osc.connect(gain);
+          gain.connect(this.sfxGain);
+          osc.start(now + offset);
+          osc.stop(now + offset + 0.48);
+        });
+      }
+    }
+
+    const soundEngine = new VoxelAudioManager();
+
+    // =========================================================================
+    // 3. PIXEL FIREWORKS OVERLAY (Celebration on ACCEPT INVITATION)
+    // =========================================================================
+    function PixelFireworksCanvas({ active }) {
+      const canvasRef = useRef(null);
+
+      useEffect(() => {
+        if (!active) return;
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        let animId;
+        let particles = [];
+        const colors = ["#10B981", "#FBBF24", "#22D3EE", "#A855F7", "#F8FAFC"];
+
+        const resize = () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        };
+        resize();
+        window.addEventListener("resize", resize);
+
+        const spawnBurst = (x, y) => {
+          for (let i = 0; i < 42; i++) {
+            const angle = (Math.PI * 2 * i) / 42 + (Math.random() - 0.5) * 0.2;
+            const speed = 2.5 + Math.random() * 5.5;
+            particles.push({
+              x,
+              y,
+              vx: Math.cos(angle) * speed,
+              vy: Math.sin(angle) * speed,
+              size: 5 + Math.floor(Math.random() * 5),
+              color: colors[Math.floor(Math.random() * colors.length)],
+              alpha: 1,
+              decay: 0.013 + Math.random() * 0.01
+            });
+          }
+        };
+
+        spawnBurst(canvas.width * 0.28, canvas.height * 0.35);
+        spawnBurst(canvas.width * 0.72, canvas.height * 0.32);
+        const burstTimer1 = setTimeout(() => spawnBurst(canvas.width * 0.5, canvas.height * 0.26), 380);
+        const burstTimer2 = setTimeout(() => spawnBurst(canvas.width * 0.35, canvas.height * 0.45), 760);
+        const burstTimer3 = setTimeout(() => spawnBurst(canvas.width * 0.65, canvas.height * 0.42), 1100);
+
+        const render = () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          particles.forEach((p) => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.08;
+            p.alpha -= p.decay;
+            if (p.alpha > 0) {
+              ctx.globalAlpha = p.alpha;
+              ctx.fillStyle = p.color;
+              ctx.fillRect(Math.round(p.x), Math.round(p.y), p.size, p.size);
+            }
+          });
+          particles = particles.filter((p) => p.alpha > 0);
+          if (particles.length > 0) {
+            animId = requestAnimationFrame(render);
+          }
+        };
+        render();
+
+        return () => {
+          cancelAnimationFrame(animId);
+          clearTimeout(burstTimer1);
+          clearTimeout(burstTimer2);
+          clearTimeout(burstTimer3);
+          window.removeEventListener("resize", resize);
+        };
+      }, [active]);
+
+      if (!active) return null;
+      return (
+        <canvas
+          ref={canvasRef}
+          className="fixed inset-0 pointer-events-none z-50"
+        />
+      );
+    }
+
+    // =========================================================================
+    // 4. INTERACTIVE THREE.JS 3D MINECRAFT × CHEMISTRY WORLD & LAB SCENE
+    // =========================================================================
+    function MinecraftLab3DScene({
+      stage,
+      collectedElements,
+      onCollectElement,
+      onClickCraftingTable,
+      onOpenChest,
+      skyMood,
+      lowGraphics
+    }) {
+      const mountRef = useRef(null);
+      const sceneStateRef = useRef({
+        stage,
+        collectedElements,
+        onCollectElement,
+        onClickCraftingTable,
+        onOpenChest,
+        skyMood
+      });
+
+      useEffect(() => {
+        sceneStateRef.current = {
+          stage,
+          collectedElements,
+          onCollectElement,
+          onClickCraftingTable,
+          onOpenChest,
+          skyMood
+        };
+      }, [stage, collectedElements, onCollectElement, onClickCraftingTable, onOpenChest, skyMood]);
+
+      useEffect(() => {
+        if (lowGraphics || !window.THREE || !mountRef.current) return;
+
+        const container = mountRef.current;
+        let width = container.clientWidth || window.innerWidth;
+        let height = container.clientHeight || window.innerHeight;
+
+        let renderer;
+        try {
+          renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
+        } catch (err) {
+          console.warn("WebGL unavailable, falling back to 2D view.", err);
+          return;
+        }
+
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.15;
+        container.innerHTML = "";
+        container.appendChild(renderer.domElement);
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0b1528);
+        scene.fog = new THREE.FogExp2(0x0b1528, 0.022);
+
+        const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 150);
+        camera.position.set(16, 11, 20);
+
+        const hemiLight = new THREE.HemisphereLight(0x7dd3fc, 0x1e293b, 0.72);
+        hemiLight.position.set(0, 30, 0);
+        scene.add(hemiLight);
+
+        const sunLight = new THREE.DirectionalLight(0xfde68a, 1.45);
+        sunLight.position.set(16, 26, 14);
+        sunLight.castShadow = true;
+        sunLight.shadow.mapSize.width = 2048;
+        sunLight.shadow.mapSize.height = 2048;
+        sunLight.shadow.camera.near = 2;
+        sunLight.shadow.camera.far = 65;
+        const d = 18;
+        sunLight.shadow.camera.left = -d;
+        sunLight.shadow.camera.right = d;
+        sunLight.shadow.camera.top = d;
+        sunLight.shadow.camera.bottom = -d;
+        sunLight.shadow.bias = -0.0005;
+        scene.add(sunLight);
+
+        const emeraldLight = new THREE.PointLight(0x10b981, 0.5, 22);
+        emeraldLight.position.set(-2.5, 4.0, -1.5);
+        scene.add(emeraldLight);
+
+        const thermiteLight = new THREE.PointLight(0xffb703, 0.4, 24);
+        thermiteLight.position.set(0, 2.8, -1.2);
+        scene.add(thermiteLight);
+
+        const purpleLight = new THREE.PointLight(0xa855f7, 0.45, 18);
+        purpleLight.position.set(3.8, 3.5, -2.5);
+        scene.add(purpleLight);
+
+        const goldChestLight = new THREE.PointLight(0xfbbf24, 0, 18);
+        goldChestLight.position.set(0, 2.6, 1.4);
+        scene.add(goldChestLight);
+
+        const sunbeamGroup = new THREE.Group();
+        const beamMat = new THREE.MeshBasicMaterial({
+          color: 0xfef08a,
+          transparent: true,
+          opacity: 0.055,
+          depthWrite: false,
+          side: THREE.DoubleSide,
+          blending: THREE.AdditiveBlending
+        });
+        [
+          [-4, 9, -3, 2.6],
+          [2, 10, 1, 3.2],
+          [6, 9, -5, 2.2]
+        ].forEach(([bx, by, bz, radius]) => {
+          const beam = new THREE.Mesh(new THREE.CylinderGeometry(radius * 0.5, radius * 1.4, 22, 12, 1, true), beamMat);
+          beam.position.set(bx, by, bz);
+          beam.rotation.z = -0.28;
+          beam.rotation.x = 0.18;
+          sunbeamGroup.add(beam);
+        });
+        scene.add(sunbeamGroup);
+
+        const makePixelCanvas = (drawFn) => {
+          const canvas = document.createElement("canvas");
+          canvas.width = 16;
+          canvas.height = 16;
+          const ctx = canvas.getContext("2d");
+          drawFn(ctx);
+          const tex = new THREE.CanvasTexture(canvas);
+          tex.magFilter = THREE.NearestFilter;
+          tex.minFilter = THREE.NearestFilter;
+          tex.encoding = THREE.sRGBEncoding;
+          return tex;
+        };
+
+        const seededNoise = (x, y, seed = 1) => {
+          const n = Math.sin(x * 12.9898 + y * 78.233 + seed * 43.12) * 43758.5453;
+          return n - Math.floor(n);
+        };
+
+        const grassTopTex = makePixelCanvas((ctx) => {
+          const greens = ["#4C9A2A", "#5BB334", "#3E8422", "#68C13E", "#468E26"];
+          for (let y = 0; y < 16; y++) {
+            for (let x = 0; x < 16; x++) {
+              ctx.fillStyle = greens[Math.floor(seededNoise(x, y, 2) * greens.length)];
+              ctx.fillRect(x, y, 1, 1);
+            }
+          }
+        });
+
+        const dirtTex = makePixelCanvas((ctx) => {
+          const browns = ["#6E4B32", "#5D3E29", "#7C563A", "#523623", "#845C3F"];
+          for (let y = 0; y < 16; y++) {
+            for (let x = 0; x < 16; x++) {
+              const r = seededNoise(x, y, 5);
+              ctx.fillStyle = r > 0.92 ? "#7A7A7A" : browns[Math.floor(r * browns.length)];
+              ctx.fillRect(x, y, 1, 1);
+            }
+          }
+        });
+
+        const grassSideTex = makePixelCanvas((ctx) => {
+          const browns = ["#6E4B32", "#5D3E29", "#7C563A", "#523623"];
+          const greens = ["#4C9A2A", "#5BB334", "#3E8422", "#68C13E"];
+          for (let y = 0; y < 16; y++) {
+            for (let x = 0; x < 16; x++) {
+              const r = seededNoise(x, y, 9);
+              const fringeDepth = 3 + Math.floor(seededNoise(x, 0, 11) * 3);
+              if (y < fringeDepth) {
+                ctx.fillStyle = greens[Math.floor(r * greens.length)];
+              } else if (y === fringeDepth && r > 0.45) {
+                ctx.fillStyle = "#35701C";
+              } else {
+                ctx.fillStyle = r > 0.93 ? "#7A7A7A" : browns[Math.floor(r * browns.length)];
+              }
+              ctx.fillRect(x, y, 1, 1);
+            }
+          }
+        });
+
+        const grassBlockMaterials = [
+          new THREE.MeshStandardMaterial({ map: grassSideTex, roughness: 0.85 }),
+          new THREE.MeshStandardMaterial({ map: grassSideTex, roughness: 0.85 }),
+          new THREE.MeshStandardMaterial({ map: grassTopTex, roughness: 0.8 }),
+          new THREE.MeshStandardMaterial({ map: dirtTex, roughness: 0.9 }),
+          new THREE.MeshStandardMaterial({ map: grassSideTex, roughness: 0.85 }),
+          new THREE.MeshStandardMaterial({ map: grassSideTex, roughness: 0.85 })
+        ];
+
+        const stoneTex = makePixelCanvas((ctx) => {
+          const shades = ["#686C73", "#7B8088", "#575B61", "#8B9099", "#4C5056"];
+          for (let y = 0; y < 16; y++) {
+            for (let x = 0; x < 16; x++) {
+              const cell = Math.floor(x / 4) * 7 + Math.floor(y / 3) * 13;
+              const isMortar = (x % 4 === 0 && seededNoise(x, y, 3) > 0.35) || (y % 4 === 0 && seededNoise(x, y, 4) > 0.35);
+              if (isMortar) {
+                ctx.fillStyle = "#43474D";
+              } else {
+                ctx.fillStyle = shades[(cell + Math.floor(seededNoise(x, y, 7) * 2)) % shades.length];
+              }
+              ctx.fillRect(x, y, 1, 1);
+            }
+          }
+        });
+        const stoneMat = new THREE.MeshStandardMaterial({ map: stoneTex, bumpMap: stoneTex, bumpScale: 0.03, roughness: 0.82 });
+
+        const labTileTex = makePixelCanvas((ctx) => {
+          for (let y = 0; y < 16; y++) {
+            for (let x = 0; x < 16; x++) {
+              if (x === 0 || y === 0 || x === 15 || y === 15) {
+                ctx.fillStyle = "#172033";
+              } else if ((x === 4 || x === 11) && (y === 4 || y === 11)) {
+                ctx.fillStyle = "#10B981";
+              } else {
+                const n = seededNoise(x, y, 19);
+                ctx.fillStyle = n > 0.5 ? "#263147" : "#1E273B";
+              }
+              ctx.fillRect(x, y, 1, 1);
+            }
+          }
+        });
+        const labFloorMat = new THREE.MeshStandardMaterial({
+          map: labTileTex,
+          bumpMap: labTileTex,
+          bumpScale: 0.02,
+          roughness: 0.38,
+          metalness: 0.15
+        });
+
+        const oakBarkTex = makePixelCanvas((ctx) => {
+          const barks = ["#584329", "#695132", "#473520", "#735937"];
+          for (let y = 0; y < 16; y++) {
+            for (let x = 0; x < 16; x++) {
+              const ridge = (x % 3 === 0) ? 2 : Math.floor(seededNoise(x, Math.floor(y / 2), 21) * barks.length);
+              ctx.fillStyle = barks[ridge % barks.length];
+              ctx.fillRect(x, y, 1, 1);
+            }
+          }
+        });
+        const oakTopTex = makePixelCanvas((ctx) => {
+          for (let y = 0; y < 16; y++) {
+            for (let x = 0; x < 16; x++) {
+              const dist = Math.max(Math.abs(x - 7.5), Math.abs(y - 7.5));
+              if (dist > 6.5) ctx.fillStyle = "#523D24";
+              else if (Math.floor(dist) % 2 === 0) ctx.fillStyle = "#A48356";
+              else ctx.fillStyle = "#8B6C43";
+              ctx.fillRect(x, y, 1, 1);
+            }
+          }
+        });
+        const oakLogMaterials = [
+          new THREE.MeshStandardMaterial({ map: oakBarkTex, roughness: 0.88 }),
+          new THREE.MeshStandardMaterial({ map: oakBarkTex, roughness: 0.88 }),
+          new THREE.MeshStandardMaterial({ map: oakTopTex, roughness: 0.85 }),
+          new THREE.MeshStandardMaterial({ map: oakTopTex, roughness: 0.85 }),
+          new THREE.MeshStandardMaterial({ map: oakBarkTex, roughness: 0.88 }),
+          new THREE.MeshStandardMaterial({ map: oakBarkTex, roughness: 0.88 })
+        ];
+
+        const leavesTex = makePixelCanvas((ctx) => {
+          const leafColors = ["#2D6E23", "#3D8B2F", "#1F4F18", "#4EA33D", "#255C1D"];
+          for (let y = 0; y < 16; y++) {
+            for (let x = 0; x < 16; x++) {
+              const r = seededNoise(x, y, 31);
+              ctx.fillStyle = leafColors[Math.floor(r * leafColors.length)];
+              ctx.fillRect(x, y, 1, 1);
+            }
+          }
+        });
+        const leavesMat = new THREE.MeshStandardMaterial({ map: leavesTex, roughness: 0.82 });
+
+        const craftingTopTex = makePixelCanvas((ctx) => {
+          ctx.fillStyle = "#9C693B";
+          ctx.fillRect(0, 0, 16, 16);
+          ctx.fillStyle = "#6B4423";
+          ctx.fillRect(0, 0, 16, 2);
+          ctx.fillRect(0, 14, 16, 2);
+          ctx.fillRect(0, 0, 2, 16);
+          ctx.fillRect(14, 0, 2, 16);
+          ctx.fillStyle = "#3E2411";
+          ctx.fillRect(5, 2, 1, 12);
+          ctx.fillRect(10, 2, 1, 12);
+          ctx.fillRect(2, 5, 12, 1);
+          ctx.fillRect(2, 10, 12, 1);
+        });
+
+        const craftingSideTex = makePixelCanvas((ctx) => {
+          for (let y = 0; y < 16; y++) {
+            for (let x = 0; x < 16; x++) {
+              ctx.fillStyle = y % 4 === 0 ? "#6B4423" : (seededNoise(x, y, 41) > 0.5 ? "#A87444" : "#966538");
+              ctx.fillRect(x, y, 1, 1);
+            }
+          }
+          ctx.fillStyle = "#523217";
+          ctx.fillRect(0, 0, 16, 3);
+          ctx.fillStyle = "#CBD5E1";
+          ctx.fillRect(4, 5, 2, 6);
+          ctx.fillRect(10, 6, 3, 2);
+          ctx.fillStyle = "#451A03";
+          ctx.fillRect(4, 11, 2, 2);
+          ctx.fillRect(11, 8, 1, 5);
+        });
+
+        const craftingMaterials = [
+          new THREE.MeshStandardMaterial({ map: craftingSideTex, roughness: 0.72 }),
+          new THREE.MeshStandardMaterial({ map: craftingSideTex, roughness: 0.72 }),
+          new THREE.MeshStandardMaterial({ map: craftingTopTex, roughness: 0.68 }),
+          new THREE.MeshStandardMaterial({ map: oakTopTex, roughness: 0.8 }),
+          new THREE.MeshStandardMaterial({ map: craftingSideTex, roughness: 0.72 }),
+          new THREE.MeshStandardMaterial({ map: craftingSideTex, roughness: 0.72 })
+        ];
+
+        const bookshelfTex = makePixelCanvas((ctx) => {
+          for (let y = 0; y < 16; y++) {
+            for (let x = 0; x < 16; x++) {
+              if (y < 2 || y === 7 || y === 8 || y >= 14) {
+                ctx.fillStyle = seededNoise(x, y, 50) > 0.5 ? "#9A683A" : "#83562D";
+                ctx.fillRect(x, y, 1, 1);
+              } else {
+                const bookPalette = ["#B91C1C", "#1D4ED8", "#15803D", "#B45309", "#6D28D9", "#0E7490"];
+                const spineIdx = Math.floor(x / 2) + (y > 8 ? 3 : 0);
+                if (x % 2 === 1 && y % 3 === 0) {
+                  ctx.fillStyle = "#FDE68A";
+                } else {
+                  ctx.fillStyle = bookPalette[spineIdx % bookPalette.length];
+                }
+                ctx.fillRect(x, y, 1, 1);
+              }
+            }
+          }
+        });
+        const bookshelfMaterials = [
+          new THREE.MeshStandardMaterial({ map: bookshelfTex, roughness: 0.75 }),
+          new THREE.MeshStandardMaterial({ map: bookshelfTex, roughness: 0.75 }),
+          new THREE.MeshStandardMaterial({ map: oakTopTex, roughness: 0.8 }),
+          new THREE.MeshStandardMaterial({ map: oakTopTex, roughness: 0.8 }),
+          new THREE.MeshStandardMaterial({ map: bookshelfTex, roughness: 0.75 }),
+          new THREE.MeshStandardMaterial({ map: bookshelfTex, roughness: 0.75 })
+        ];
+
+        const chestFrontTex = makePixelCanvas((ctx) => {
+          for (let y = 0; y < 16; y++) {
+            for (let x = 0; x < 16; x++) {
+              if (x === 0 || y === 0 || x === 15 || y === 15) {
+                ctx.fillStyle = "#3E220C";
+              } else if (y % 4 === 0) {
+                ctx.fillStyle = "#6B3D18";
+              } else {
+                ctx.fillStyle = seededNoise(x, y, 61) > 0.5 ? "#B57336" : "#9E612B";
+              }
+              ctx.fillRect(x, y, 1, 1);
+            }
+          }
+        });
+        const chestMat = new THREE.MeshStandardMaterial({
+          map: chestFrontTex,
+          bumpMap: chestFrontTex,
+          bumpScale: 0.025,
+          roughness: 0.62
+        });
+
+        const boxGeo = new THREE.BoxGeometry(1, 1, 1);
+        const grassPositions = [];
+        const stonePositions = [];
+        const labFloorPositions = [];
+
+        for (let x = -16; x <= 16; x++) {
+          for (let z = -16; z <= 16; z++) {
+            const distFromCenter = Math.sqrt(x * x + z * z);
+            if (distFromCenter < 6.5) {
+              labFloorPositions.push(new THREE.Vector3(x, 0, z));
+            } else {
+              const hillHeight = Math.max(
+                0,
+                Math.floor(
+                  (Math.sin(x * 0.28) + Math.cos(z * 0.28)) * 1.6 +
+                  (distFromCenter > 11 ? (distFromCenter - 11) * 0.55 : 0)
+                )
+              );
+              grassPositions.push(new THREE.Vector3(x, hillHeight, z));
+              for (let y = 0; y < hillHeight; y++) {
+                stonePositions.push(new THREE.Vector3(x, y, z));
+              }
+            }
+          }
+        }
+
+        const createInstancedBlocks = (positions, material, receiveShadow = true) => {
+          const mesh = new THREE.InstancedMesh(boxGeo, material, positions.length);
+          mesh.receiveShadow = receiveShadow;
+          mesh.castShadow = true;
+          const dummy = new THREE.Object3D();
+          positions.forEach((pos, idx) => {
+            dummy.position.copy(pos);
+            dummy.updateMatrix();
+            mesh.setMatrixAt(idx, dummy.matrix);
+          });
+          mesh.instanceMatrix.needsUpdate = true;
+          scene.add(mesh);
+          return mesh;
+        };
+
+        createInstancedBlocks(grassPositions, grassBlockMaterials);
+        createInstancedBlocks(stonePositions, stoneMat);
+        createInstancedBlocks(labFloorPositions, labFloorMat);
+
+        const treeCoords = [
+          [-9, 1, -8], [10, 1, -7], [-11, 2, 6], [9, 1, 9],
+          [-6, 1, -12], [7, 1, -12], [-13, 2, -2], [13, 2, 2]
+        ];
+        const logPositions = [];
+        const leafPositions = [];
+
+        treeCoords.forEach(([tx, ty, tz]) => {
+          for (let h = 0; h < 4; h++) {
+            logPositions.push(new THREE.Vector3(tx, ty + h, tz));
+          }
+          for (let lx = -2; lx <= 2; lx++) {
+            for (let lz = -2; lz <= 2; lz++) {
+              for (let ly = 3; ly <= 5; ly++) {
+                if (Math.abs(lx) + Math.abs(lz) + (ly - 3) <= 3) {
+                  leafPositions.push(new THREE.Vector3(tx + lx, ty + ly, tz + lz));
+                }
+              }
+            }
+          }
+        });
+
+        createInstancedBlocks(logPositions, oakLogMaterials);
+        createInstancedBlocks(leafPositions, leavesMat);
+
+        const cloudGroup = new THREE.Group();
+        const cloudMat = new THREE.MeshLambertMaterial({
+          color: 0xf8fafc,
+          transparent: true,
+          opacity: 0.72
+        });
+        for (let i = 0; i < 8; i++) {
+          const cloud = new THREE.Mesh(new THREE.BoxGeometry(5.5, 0.85, 3.0), cloudMat);
+          cloud.position.set((Math.random() - 0.5) * 34, 14 + Math.random() * 3, (Math.random() - 0.5) * 34);
+          cloudGroup.add(cloud);
+        }
+        scene.add(cloudGroup);
+
+        const labGroup = new THREE.Group();
+        scene.add(labGroup);
+
+        const shelfCoords = [
+          [-3, 1, -4], [-2, 1, -4], [2, 1, -4], [3, 1, -4],
+          [-3, 2, -4], [-2, 2, -4], [2, 2, -4], [3, 2, -4],
+          [-4, 1, -3], [4, 1, -3], [-4, 2, -3], [4, 2, -3]
+        ];
+        shelfCoords.forEach(([bx, by, bz]) => {
+          const shelf = new THREE.Mesh(boxGeo, bookshelfMaterials);
+          shelf.position.set(bx, by, bz);
+          shelf.castShadow = true;
+          shelf.receiveShadow = true;
+          labGroup.add(shelf);
+        });
+
+        const enchantBase = new THREE.Mesh(
+          new THREE.BoxGeometry(1, 0.75, 1),
+          new THREE.MeshStandardMaterial({ color: 0x18122b, roughness: 0.45 })
+        );
+        enchantBase.position.set(-3.2, 0.875, -1.2);
+        enchantBase.castShadow = true;
+        labGroup.add(enchantBase);
+
+        const enchantCloth = new THREE.Mesh(
+          new THREE.BoxGeometry(0.88, 0.06, 0.88),
+          new THREE.MeshStandardMaterial({ color: 0xb91c1c, roughness: 0.6 })
+        );
+        enchantCloth.position.set(-3.2, 1.27, -1.2);
+        labGroup.add(enchantCloth);
+
+        const enchantBook = new THREE.Mesh(
+          new THREE.BoxGeometry(0.55, 0.14, 0.4),
+          new THREE.MeshStandardMaterial({ color: 0xfbbf24, emissive: 0x92400e, emissiveIntensity: 0.45 })
+        );
+        enchantBook.position.set(-3.2, 1.65, -1.2);
+        enchantBook.rotation.z = 0.25;
+        labGroup.add(enchantBook);
+
+        const cauldron = new THREE.Mesh(
+          new THREE.BoxGeometry(1.15, 0.95, 1.15),
+          new THREE.MeshStandardMaterial({ map: stoneTex, color: 0x334155, roughness: 0.45, metalness: 0.65 })
+        );
+        cauldron.position.set(3.2, 0.975, -1.2);
+        cauldron.castShadow = true;
+        labGroup.add(cauldron);
+
+        const thermiteCrucibleCore = new THREE.Mesh(
+          new THREE.BoxGeometry(0.88, 0.12, 0.88),
+          new THREE.MeshBasicMaterial({ color: 0xf59e0b })
+        );
+        thermiteCrucibleCore.position.set(3.2, 1.42, -1.2);
+        labGroup.add(thermiteCrucibleCore);
+
+        const crystalMeshes = [];
+        const crystalConfigs = [
+          { pos: [-5.2, 1.4, 1.5], color: 0x38bdf8, scale: 0.9 },
+          { pos: [5.2, 1.5, 1.2], color: 0xc084fc, scale: 1.0 },
+          { pos: [-4.8, 1.3, -4.5], color: 0x10b981, scale: 0.85 },
+          { pos: [4.8, 1.6, -4.5], color: 0xfbbf24, scale: 0.95 }
+        ];
+        crystalConfigs.forEach((cfg) => {
+          const cMesh = new THREE.Mesh(
+            new THREE.OctahedronGeometry(0.55 * cfg.scale, 0),
+            new THREE.MeshStandardMaterial({
+              color: cfg.color,
+              emissive: cfg.color,
+              emissiveIntensity: 0.75,
+              roughness: 0.15
+            })
+          );
+          cMesh.position.set(...cfg.pos);
+          labGroup.add(cMesh);
+          crystalMeshes.push(cMesh);
+        });
+
+        const interactiveObjects = [];
+
+        const createReactantOrb = (symbol, displayLabel, hexColor, position) => {
+          const group = new THREE.Group();
+          group.position.set(...position);
+
+          const orbMat = new THREE.MeshStandardMaterial({
+            color: hexColor,
+            emissive: hexColor,
+            emissiveIntensity: 0.8,
+            roughness: 0.2,
+            metalness: 0.25
+          });
+          const orbMesh = new THREE.Mesh(new THREE.OctahedronGeometry(0.52, 0), orbMat);
+          orbMesh.userData = { interactType: "element", symbol };
+          group.add(orbMesh);
+
+          const frameMesh = new THREE.Mesh(
+            new THREE.BoxGeometry(0.88, 0.88, 0.88),
+            new THREE.MeshBasicMaterial({ color: hexColor, wireframe: true })
+          );
+          frameMesh.userData = { interactType: "element", symbol };
+          group.add(frameMesh);
+
+          const badgeCanvas = document.createElement("canvas");
+          badgeCanvas.width = 192;
+          badgeCanvas.height = 128;
+          const bCtx = badgeCanvas.getContext("2d");
+          bCtx.fillStyle = "rgba(7, 11, 25, 0.9)";
+          bCtx.fillRect(12, 16, 168, 96);
+          bCtx.strokeStyle = hexColor;
+          bCtx.lineWidth = 8;
+          bCtx.strokeRect(12, 16, 168, 96);
+          bCtx.fillStyle = "#F8FAFC";
+          bCtx.font = "bold 44px monospace";
+          bCtx.textAlign = "center";
+          bCtx.textBaseline = "middle";
+          bCtx.fillText(displayLabel, 96, 66);
+
+          const spriteTex = new THREE.CanvasTexture(badgeCanvas);
+          const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: spriteTex }));
+          sprite.scale.set(1.55, 1.05, 1);
+          sprite.position.set(0, 1.18, 0);
+          sprite.userData = { interactType: "element", symbol };
+          group.add(sprite);
+
+          scene.add(group);
+          interactiveObjects.push(orbMesh, frameMesh, sprite);
+          return { group, orbMesh, frameMesh, baseY: position[1] };
+        };
+
+        const elementOrbs = {
+          Al: createReactantOrb("Al", "Al", "#38BDF8", [-2.7, 2.2, 1.6]),
+          Fe2O3: createReactantOrb("Fe2O3", "Fe₂O₃", "#F97316", [0, 2.6, -2.5]),
+          Mg: createReactantOrb("Mg", "Mg", "#FBBF24", [2.7, 2.2, 1.6])
+        };
+
+        const craftingTable = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.2, 1.2), craftingMaterials);
+        craftingTable.position.set(0, 1.1, -1.2);
+        craftingTable.castShadow = true;
+        craftingTable.receiveShadow = true;
+        craftingTable.userData = { interactType: "crafting" };
+        scene.add(craftingTable);
+        interactiveObjects.push(craftingTable);
+
+        const craftingGlowRing = new THREE.Mesh(
+          new THREE.RingGeometry(0.85, 1.08, 4),
+          new THREE.MeshBasicMaterial({ color: 0xfbbf24, side: THREE.DoubleSide, transparent: true, opacity: 0 })
+        );
+        craftingGlowRing.rotation.x = -Math.PI / 2;
+        craftingGlowRing.position.set(0, 0.52, -1.2);
+        scene.add(craftingGlowRing);
+
+        const chestGroup = new THREE.Group();
+        chestGroup.position.set(0, 0.5, 1.3);
+        scene.add(chestGroup);
+
+        const chestTrimMat = new THREE.MeshStandardMaterial({
+          color: 0xfbbf24,
+          emissive: 0xd97706,
+          emissiveIntensity: 0.4,
+          roughness: 0.25,
+          metalness: 0.75
+        });
+        const emeraldCoreMat = new THREE.MeshStandardMaterial({
+          color: 0x10b981,
+          emissive: 0x10b981,
+          emissiveIntensity: 0.95
+        });
+
+        const chestBase = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.75, 1.0), chestMat);
+        chestBase.position.set(0, 0.375, 0);
+        chestBase.castShadow = true;
+        chestBase.userData = { interactType: "chest" };
+        chestGroup.add(chestBase);
+
+        const chestBand = new THREE.Mesh(new THREE.BoxGeometry(1.44, 0.14, 1.04), chestTrimMat);
+        chestBand.position.set(0, 0.72, 0);
+        chestBand.userData = { interactType: "chest" };
+        chestGroup.add(chestBand);
+
+        const lidPivot = new THREE.Group();
+        lidPivot.position.set(0, 0.75, -0.5);
+        chestGroup.add(lidPivot);
+
+        const chestLid = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.36, 1.0), chestMat);
+        chestLid.position.set(0, 0.18, 0.5);
+        chestLid.castShadow = true;
+        chestLid.userData = { interactType: "chest" };
+        lidPivot.add(chestLid);
+
+        const chestLatch = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.32, 0.12), emeraldCoreMat);
+        chestLatch.position.set(0, 0.04, 1.02);
+        chestLatch.userData = { interactType: "chest" };
+        lidPivot.add(chestLatch);
+
+        const chestCore = new THREE.Mesh(new THREE.OctahedronGeometry(0.32, 0), emeraldCoreMat);
+        chestCore.position.set(0, 0.65, 0);
+        chestGroup.add(chestCore);
+
+        interactiveObjects.push(chestBase, chestBand, chestLid, chestLatch);
+
+        const particleCount = 190;
+        const pGeo = new THREE.BufferGeometry();
+        const pPositions = new Float32Array(particleCount * 3);
+        const pColors = new Float32Array(particleCount * 3);
+        const colorPalette = [
+          new THREE.Color(0xfbbf24),
+          new THREE.Color(0xf97316),
+          new THREE.Color(0x10b981),
+          new THREE.Color(0xfef08a)
+        ];
+
+        for (let i = 0; i < particleCount; i++) {
+          pPositions[i * 3] = (Math.random() - 0.5) * 24;
+          pPositions[i * 3 + 1] = 0.8 + Math.random() * 11;
+          pPositions[i * 3 + 2] = (Math.random() - 0.5) * 24;
+
+          const col = colorPalette[i % colorPalette.length];
+          pColors[i * 3] = col.r;
+          pColors[i * 3 + 1] = col.g;
+          pColors[i * 3 + 2] = col.b;
+        }
+        pGeo.setAttribute("position", new THREE.BufferAttribute(pPositions, 3));
+        pGeo.setAttribute("color", new THREE.BufferAttribute(pColors, 3));
+
+        const pMat = new THREE.PointsMaterial({
+          size: 0.2,
+          vertexColors: true,
+          transparent: true,
+          opacity: 0.9
+        });
+        const particles = new THREE.Points(pGeo, pMat);
+        scene.add(particles);
+
+        const mcFireTex = makePixelCanvas((ctx) => {
+          ctx.clearRect(0, 0, 16, 16);
+          ctx.fillStyle = "#F59E0B";
+          ctx.fillRect(5, 2, 6, 12);
+          ctx.fillRect(3, 6, 10, 7);
+          ctx.fillRect(4, 13, 8, 2);
+          ctx.fillStyle = "#FDE047";
+          ctx.fillRect(6, 4, 4, 9);
+          ctx.fillRect(5, 8, 6, 5);
+          ctx.fillStyle = "#FFFBEB";
+          ctx.fillRect(7, 7, 2, 5);
+          ctx.fillStyle = "#DC2626";
+          ctx.fillRect(4, 3, 1, 3);
+          ctx.fillRect(11, 5, 1, 3);
+        });
+
+        const firePlumeGroup = new THREE.Group();
+        firePlumeGroup.position.set(0, 1.8, -1.2);
+        firePlumeGroup.visible = false;
+        scene.add(firePlumeGroup);
+
+        const fireSprites = [];
+        for (let i = 0; i < 18; i++) {
+          const sMat = new THREE.SpriteMaterial({
+            map: mcFireTex,
+            transparent: true,
+            opacity: 0.95,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+          });
+          const spr = new THREE.Sprite(sMat);
+          const angle = (Math.PI * 2 * i) / 18;
+          const rad = 0.25 + (i % 4) * 0.28;
+          spr.position.set(Math.cos(angle) * rad, (i % 5) * 0.45, Math.sin(angle) * rad);
+          const baseScale = 1.1 + (i % 3) * 0.55;
+          spr.scale.set(baseScale, baseScale * 1.25, 1);
+          spr.userData = {
+            angle,
+            rad,
+            phase: i * 0.65,
+            baseScale
+          };
+          firePlumeGroup.add(spr);
+          fireSprites.push(spr);
+        }
+
+        const raycaster = new THREE.Raycaster();
+        const pointer = new THREE.Vector2();
+        let isDragging = false;
+        let prevPointer = { x: 0, y: 0 };
+        let userYawOffset = 0;
+        let userPitchOffset = 0;
+
+        const updatePointerCoords = (clientX, clientY) => {
+          const rect = renderer.domElement.getBoundingClientRect();
+          pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+          pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+        };
+
+        const handlePointerDown = (e) => {
+          const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+          const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+          isDragging = true;
+          prevPointer = { x: clientX, y: clientY };
+        };
+
+        const handlePointerMove = (e) => {
+          const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+          const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+          if (isDragging) {
+            const dx = clientX - prevPointer.x;
+            const dy = clientY - prevPointer.y;
+            userYawOffset = Math.max(-0.85, Math.min(0.85, userYawOffset - dx * 0.0045));
+            userPitchOffset = Math.max(-0.35, Math.min(0.45, userPitchOffset + dy * 0.004));
+            prevPointer = { x: clientX, y: clientY };
+          } else if (!e.touches) {
+            updatePointerCoords(clientX, clientY);
+            raycaster.setFromCamera(pointer, camera);
+            const hits = raycaster.intersectObjects(interactiveObjects, false);
+            renderer.domElement.style.cursor = hits.length > 0 ? "pointer" : "grab";
+          }
+        };
+
+        const handlePointerUp = () => {
+          isDragging = false;
+        };
+
+        const handleCanvasClick = (e) => {
+          const current = sceneStateRef.current;
+          if (current.stage === "intro") return;
+
+          updatePointerCoords(e.clientX, e.clientY);
+          raycaster.setFromCamera(pointer, camera);
+          const hits = raycaster.intersectObjects(interactiveObjects, false);
+
+          if (hits.length > 0) {
+            const hitData = hits[0].object.userData;
+            if (hitData.interactType === "element") {
+              current.onCollectElement(hitData.symbol);
+            } else if (hitData.interactType === "crafting") {
+              current.onClickCraftingTable();
+            } else if (hitData.interactType === "chest") {
+              current.onOpenChest();
+            }
+          }
+        };
+
+        const domElem = renderer.domElement;
+        domElem.addEventListener("mousedown", handlePointerDown);
+        window.addEventListener("mousemove", handlePointerMove);
+        window.addEventListener("mouseup", handlePointerUp);
+        domElem.addEventListener("touchstart", handlePointerDown, { passive: true });
+        window.addEventListener("touchmove", handlePointerMove, { passive: true });
+        window.addEventListener("touchend", handlePointerUp);
+        domElem.addEventListener("click", handleCanvasClick);
+
+        const handleResize = () => {
+          if (!container) return;
+          width = container.clientWidth || window.innerWidth;
+          height = container.clientHeight || window.innerHeight;
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+          renderer.setSize(width, height);
+        };
+        window.addEventListener("resize", handleResize);
+
+        let animFrameId;
+        const clock = new THREE.Clock();
+        const targetCamPos = new THREE.Vector3();
+        const targetLookAt = new THREE.Vector3(0, 1.5, 0);
+        const skyColorTarget = new THREE.Color(0x0b1528);
+        const sunColorTarget = new THREE.Color(0xfde68a);
+
+        const animate = () => {
+          animFrameId = requestAnimationFrame(animate);
+          const elapsed = clock.getElapsedTime();
+          const current = sceneStateRef.current;
+
+          if (current.skyMood === "golden") {
+            skyColorTarget.setHex(0x271710);
+            sunColorTarget.setHex(0xfb923c);
+            beamMat.opacity = 0.085;
+          } else if (current.skyMood === "night") {
+            skyColorTarget.setHex(0x060916);
+            sunColorTarget.setHex(0x818cf8);
+            beamMat.opacity = 0.025;
+          } else {
+            skyColorTarget.setHex(0x0b172a);
+            sunColorTarget.setHex(0xfde68a);
+            beamMat.opacity = 0.06;
+          }
+          scene.background.lerp(skyColorTarget, 0.03);
+          scene.fog.color.lerp(skyColorTarget, 0.03);
+          sunLight.color.lerp(sunColorTarget, 0.03);
+
+          cloudGroup.children.forEach((cloud, idx) => {
+            cloud.position.x += 0.008 * (idx % 2 === 0 ? 1 : 0.7);
+            if (cloud.position.x > 18) cloud.position.x = -18;
+          });
+
+          crystalMeshes.forEach((c, idx) => {
+            c.rotation.y = elapsed * 0.8 + idx;
+            c.position.y += Math.sin(elapsed * 2 + idx) * 0.0025;
+          });
+          enchantBook.rotation.y = elapsed * 1.1;
+          enchantBook.position.y = 1.65 + Math.sin(elapsed * 2.5) * 0.08;
+
+          Object.entries(elementOrbs).forEach(([sym, obj], idx) => {
+            const isCollected = current.collectedElements.includes(sym);
+            obj.group.visible = !isCollected;
+            if (!isCollected) {
+              obj.group.position.y = obj.baseY + Math.sin(elapsed * 2.4 + idx * 1.4) * 0.22;
+              obj.orbMesh.rotation.y = elapsed * 1.6;
+              obj.frameMesh.rotation.x = elapsed * 0.9;
+              obj.frameMesh.rotation.z = elapsed * 0.7;
+            }
+          });
+
+          const allCollected = current.collectedElements.length >= 3;
+          craftingGlowRing.material.opacity = allCollected ? 0.6 + Math.sin(elapsed * 6) * 0.35 : 0;
+          craftingGlowRing.rotation.z = elapsed * 1.8;
+
+          const isThermiteActive =
+            current.stage === "thermite_ignited" ||
+            current.stage === "crafted" ||
+            current.stage === "chest_opened" ||
+            current.stage === "celebrate";
+
+          if (current.stage === "thermite_ignited") {
+            thermiteLight.intensity = 5.5 + Math.sin(elapsed * 28) * 1.8;
+            thermiteCrucibleCore.material.color.setHex(0xffffff);
+            firePlumeGroup.visible = true;
+            fireSprites.forEach((spr) => {
+              const { phase, baseScale } = spr.userData;
+              const cycle = ((elapsed * 2.2 + phase) % 1);
+              spr.position.y = cycle * 4.4;
+              const spread = 0.25 + cycle * 1.45;
+              spr.position.x = Math.cos(spr.userData.angle + elapsed * 1.5) * spread;
+              spr.position.z = Math.sin(spr.userData.angle + elapsed * 1.5) * spread;
+              const s = baseScale * (1.25 - cycle * 0.55);
+              spr.scale.set(s, s * 1.3, 1);
+              spr.material.opacity = Math.max(0, (1 - cycle) * 0.98);
+            });
+          } else {
+            firePlumeGroup.visible = false;
+            if (isThermiteActive) {
+              thermiteLight.intensity = 2.2 + Math.sin(elapsed * 6) * 0.5;
+              thermiteCrucibleCore.material.color.setHex(0xfbbf24);
+            } else {
+              thermiteLight.intensity = current.stage === "intro" ? 0.45 : 1.1;
+              thermiteCrucibleCore.material.color.setHex(0xf97316);
+            }
+          }
+
+          const chestUnlocked =
+            current.stage === "crafted" ||
+            current.stage === "chest_opened" ||
+            current.stage === "celebrate";
+
+          chestGroup.visible = chestUnlocked;
+          if (chestUnlocked) {
+            const isOpened = current.stage === "chest_opened" || current.stage === "celebrate";
+            const targetLidAngle = isOpened ? -1.15 : 0;
+            lidPivot.rotation.x += (targetLidAngle - lidPivot.rotation.x) * 0.08;
+            goldChestLight.intensity += ((isOpened ? 3.5 : 1.3) - goldChestLight.intensity) * 0.08;
+            chestCore.rotation.y = elapsed * 2.2;
+            chestCore.position.y = isOpened ? 1.15 + Math.sin(elapsed * 3) * 0.1 : 0.65;
+          } else {
+            goldChestLight.intensity = 0;
+          }
+
+          const posAttr = particles.geometry.attributes.position;
+          for (let i = 0; i < particleCount; i++) {
+            let py = posAttr.getY(i);
+            const speed =
+              current.stage === "thermite_ignited"
+                ? 0.095
+                : current.stage === "celebrate"
+                ? 0.055
+                : 0.015;
+            py += speed;
+            if (py > 12) py = 0.8;
+            posAttr.setY(i, py);
+          }
+          posAttr.needsUpdate = true;
+          particles.rotation.y = elapsed * 0.08;
+
+          if (current.stage === "intro") {
+            const angle = elapsed * 0.18;
+            targetCamPos.set(Math.sin(angle) * 16.5, 9.2 + Math.sin(elapsed * 0.4) * 0.8, Math.cos(angle) * 16.5);
+            targetLookAt.set(0, 1.8, 0);
+          } else if (current.stage === "thermite_ignited") {
+            targetCamPos.set(0, 3.8, 6.2);
+            targetLookAt.set(0, 1.6, -1.2);
+          } else if (current.stage === "chest_opened" || current.stage === "celebrate") {
+            const radius = 5.4;
+            targetCamPos.set(
+              Math.sin(userYawOffset) * radius,
+              3.2 + userPitchOffset * 3,
+              1.3 + Math.cos(userYawOffset) * radius
+            );
+            targetLookAt.set(0, 1.3, 1.0);
+          } else {
+            const radius = 8.4;
+            targetCamPos.set(
+              Math.sin(userYawOffset) * radius,
+              4.3 + userPitchOffset * 4,
+              Math.cos(userYawOffset) * radius
+            );
+            targetLookAt.set(0, 1.4, -0.3);
+          }
+
+          camera.position.lerp(targetCamPos, 0.048);
+          camera.lookAt(targetLookAt);
+
+          renderer.render(scene, camera);
+        };
+
+        animate();
+
+        return () => {
+          cancelAnimationFrame(animFrameId);
+          domElem.removeEventListener("mousedown", handlePointerDown);
+          window.removeEventListener("mousemove", handlePointerMove);
+          window.removeEventListener("mouseup", handlePointerUp);
+          domElem.removeEventListener("touchstart", handlePointerDown);
+          window.removeEventListener("touchmove", handlePointerMove);
+          window.removeEventListener("touchend", handlePointerUp);
+          domElem.removeEventListener("click", handleCanvasClick);
+          window.removeEventListener("resize", handleResize);
+          renderer.dispose();
+        };
+      }, [lowGraphics]);
+
+      if (lowGraphics) {
+        return (
+          <div className="w-full h-full bg-gradient-to-b from-[#070B19] via-[#0D1A2D] to-[#070B19] flex items-center justify-center relative overflow-hidden">
+            <div className="absolute inset-0 opacity-20" style={{
+              backgroundImage: "radial-gradient(#10B981 1.5px, transparent 1.5px)",
+              backgroundSize: "24px 24px"
+            }} />
+            <div className="text-center px-6 z-10 max-w-lg">
+              <div className="inline-block px-3 py-1 mb-3 rounded bg-amber-500/20 border border-amber-400/40 font-pixel text-xs text-amber-300">
+                2D EDITORIAL / LOW GRAPHICS MODE ACTIVE
+              </div>
+              <p className="text-slate-300 text-sm">
+                Chế độ tiết kiệm cấu hình đang bật. Bạn vẫn có thể kích hoạt Phản ứng Nhiệt Nhôm (Al + Fe₂O₃ + Mg), mở rương thiệp mời và khám phá toàn bộ nội dung mượt mà.
+              </p>
+            </div>
+          </div>
+        );
+      }
+
+      return <div ref={mountRef} className="w-full h-full" />;
+    }
+
+    // =========================================================================
+    // 5. TOP CONTROL HUD & AUDIO / GRAPHICS BAR (WITH CUSTOM MP3 UPLOAD)
+    // =========================================================================
+    function TopControlHUD({
+      isPlaying,
+      isMuted,
+      volume,
+      lowGraphics,
+      trackName,
+      onToggleMusic,
+      onUploadMp3,
+      onToggleMute,
+      onChangeVolume,
+      onToggleGraphics,
+      onJumpSection
+    }) {
+      const mp3InputRef = useRef(null);
+
+      return (
+        <header className="fixed top-0 inset-x-0 z-40 px-3 sm:px-6 py-3 pointer-events-none">
+          <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+            <button
+              onClick={() => onJumpSection("hero-lab")}
+              className="pointer-events-auto voxel-panel px-3.5 py-2 rounded-xl flex items-center gap-2.5 border border-emerald-400/35 hover:border-emerald-400 transition-colors"
+            >
+              <span className="w-2.5 h-2.5 rounded-sm bg-emerald-400 animate-pulse" />
+              <span className="font-pixel text-[11px] sm:text-xs text-warmWhite tracking-wider">
+                {INVITATION_CONFIG.projectName}
+              </span>
+              <span className="hidden md:inline font-pixel text-[10px] text-amber-300">
+                • {INVITATION_CONFIG.eventName}
+              </span>
+            </button>
+
+            <nav className="pointer-events-auto hidden xl:flex items-center gap-1.5 voxel-panel px-2.5 py-1.5 rounded-xl border border-white/10 text-xs font-medium">
+              <button
+                onClick={() => onJumpSection("hero-lab")}
+                className="px-2.5 py-1 rounded-lg hover:bg-white/10 text-slate-200 transition-colors"
+              >
+                3D Lab
+              </button>
+              <button
+                onClick={() => onJumpSection("invitation-section")}
+                className="px-2.5 py-1 rounded-lg hover:bg-white/10 text-amber-300 transition-colors"
+              >
+                Thiệp mời
+              </button>
+              <button
+                onClick={() => onJumpSection("countdown-section")}
+                className="px-2.5 py-1 rounded-lg hover:bg-white/10 text-cyan-300 transition-colors"
+              >
+                Countdown
+              </button>
+              <button
+                onClick={() => onJumpSection("timeline-section")}
+                className="px-2.5 py-1 rounded-lg hover:bg-white/10 text-emerald-300 transition-colors"
+              >
+                Lịch trình
+              </button>
+              <button
+                onClick={() => onJumpSection("gallery-section")}
+                className="px-2.5 py-1 rounded-lg hover:bg-white/10 text-purple-300 transition-colors"
+              >
+                Album ảnh
+              </button>
+              <button
+                onClick={() => onJumpSection("guestbook-section")}
+                className="px-2.5 py-1 rounded-lg hover:bg-white/10 text-slate-200 transition-colors"
+              >
+                Lưu bút
+              </button>
+            </nav>
+
+            <div className="pointer-events-auto voxel-panel px-3 py-1.5 rounded-xl flex items-center gap-2 border border-white/15">
+              <button
+                onClick={onToggleMusic}
+                title={`Đang phát: ${trackName}`}
+                className={`px-2.5 py-1 rounded-lg font-pixel text-[10px] transition-colors ${
+                  isPlaying
+                    ? "bg-emerald-500/25 text-emerald-300 border border-emerald-400/40"
+                    : "bg-white/10 text-slate-300 hover:bg-white/15"
+                }`}
+              >
+                {isPlaying ? "♪ MUSIC ON" : "♪ PLAY"}
+              </button>
+
+              {/* Nút chọn & thay nhạc định dạng MP3 từ thiết bị của người dùng */}
+              <button
+                onClick={() => {
+                  soundEngine.playClick();
+                  mp3InputRef.current?.click();
+                }}
+                title={`Chọn file nhạc .mp3 của bạn để thay thế (Hiện tại: ${trackName})`}
+                className="px-2.5 py-1 rounded-lg font-pixel text-[10px] bg-amber-400/20 hover:bg-amber-400/35 text-amber-300 border border-amber-400/45 transition-colors flex items-center gap-1"
+              >
+                <span>📂 ĐỔI MP3</span>
+              </button>
+              <input
+                ref={mp3InputRef}
+                type="file"
+                accept=".mp3,audio/mpeg,audio/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    onUploadMp3(file);
+                  }
+                  e.target.value = "";
+                }}
+                className="hidden"
+              />
+
+              <button
+                onClick={onToggleMute}
+                title={isMuted ? "Bật âm thanh" : "Tắt tiếng"}
+                className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-xs text-slate-200"
+              >
+                {isMuted ? "🔇" : "🔊"}
+              </button>
+
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={isMuted ? 0 : volume}
+                onChange={(e) => onChangeVolume(parseFloat(e.target.value))}
+                aria-label="Âm lượng"
+                className="w-14 sm:w-20 accent-emerald-400 cursor-pointer"
+              />
+
+              <button
+                onClick={onToggleGraphics}
+                title="Chuyển chế độ đồ họa"
+                className={`px-2 py-1 rounded-lg font-pixel text-[10px] border transition-colors ${
+                  lowGraphics
+                    ? "bg-amber-500/25 text-amber-300 border-amber-400/40"
+                    : "bg-white/5 text-slate-400 border-white/10 hover:text-slate-200"
+                }`}
+              >
+                {lowGraphics ? "2D LITE" : "3D HQ"}
+              </button>
+            </div>
+          </div>
+        </header>
+      );
+    }
+
+    // =========================================================================
+    // 6. INVITATION CARD SECTION (Revealed from the Treasure Chest)
+    // =========================================================================
+    function InvitationCardSection({
+      accepted,
+      onAcceptInvitation,
+      onViewSchedule,
+      onCopyPhone,
+      copiedToast
+    }) {
+      return (
+        <section id="invitation-section" className="relative py-24 px-4 sm:px-6">
+          <div className="max-w-4xl mx-auto">
+            <div className="voxel-panel rounded-3xl p-6 sm:p-10 md:p-12 border-2 border-amber-400/45 relative overflow-hidden shadow-2xl">
+              <div className="text-center mb-8">
+                <div className="inline-block px-4 py-1.5 rounded-full bg-amber-400/15 border border-amber-400/40 font-pixel text-xs text-amber-300 mb-3">
+                  ✦ TREASURE CHEST UNLOCKED ✦
+                </div>
+                <h2 className="font-pixel text-2xl sm:text-4xl md:text-5xl text-warmWhite tracking-wide">
+                  YOU ARE INVITED!
+                </h2>
+                <div className="mt-2 font-pixel text-base sm:text-xl text-emerald-300">
+                  {INVITATION_CONFIG.eventName} • {INVITATION_CONFIG.projectName}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                <div className="rounded-2xl bg-white/5 border border-white/10 p-4">
+                  <div className="font-pixel text-[11px] text-amber-300 mb-1">HOST</div>
+                  <div className="text-lg font-bold text-warmWhite">{INVITATION_CONFIG.organizer}</div>
+                </div>
+
+                <div className="rounded-2xl bg-white/5 border border-white/10 p-4">
+                  <div className="font-pixel text-[11px] text-emerald-300 mb-1">DATE</div>
+                  <div className="text-lg font-bold text-warmWhite">{INVITATION_CONFIG.dateDisplay}</div>
+                </div>
+
+                <div className="rounded-2xl bg-white/5 border border-white/10 p-4">
+                  <div className="font-pixel text-[11px] text-cyan-300 mb-1">LOCATION</div>
+                  <div className="text-lg font-bold text-warmWhite">{INVITATION_CONFIG.location}</div>
+                </div>
+
+                <div className="rounded-2xl bg-white/5 border border-white/10 p-4">
+                  <div className="font-pixel text-[11px] text-purple-300 mb-1">TIME & CONTACT</div>
+                  <div className="text-base sm:text-lg font-bold text-warmWhite">
+                    {INVITATION_CONFIG.startTime} – {INVITATION_CONFIG.endTime} •{" "}
+                    <span className="text-amber-300">{INVITATION_CONFIG.phone}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-2xl bg-gradient-to-r from-emerald-500/10 via-cyan-500/10 to-purple-500/10 border border-white/15 p-6 sm:p-8 text-center mb-8">
+                <div className="space-y-2 text-base sm:text-xl text-warmWhite font-medium italic">
+                  {INVITATION_CONFIG.message.map((line, i) => (
+                    <p key={i}>"{line}"</p>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+                <button
+                  onClick={onAcceptInvitation}
+                  className="voxel-btn px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-pixel text-xs sm:text-sm font-bold shadow-voxel-emerald"
+                >
+                  ACCEPT INVITATION
+                </button>
+
+                <button
+                  onClick={onViewSchedule}
+                  className="voxel-btn px-6 py-3.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-pixel text-xs sm:text-sm font-bold shadow-voxel-cyan"
+                >
+                  VIEW SCHEDULE
+                </button>
+
+                <a
+                  href={`tel:${INVITATION_CONFIG.phone}`}
+                  onClick={() => soundEngine.playClick()}
+                  className="voxel-btn px-6 py-3.5 rounded-xl bg-purple-500 hover:bg-purple-400 text-white font-pixel text-xs sm:text-sm font-bold shadow-voxel-purple"
+                >
+                  CONTACT HOST
+                </a>
+
+                <button
+                  onClick={onCopyPhone}
+                  className="voxel-btn px-6 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-pixel text-xs sm:text-sm font-bold shadow-voxel-gold"
+                >
+                  COPY PHONE NUMBER
+                </button>
+              </div>
+
+              {copiedToast && (
+                <div className="mt-4 text-center">
+                  <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400 text-emerald-200 font-pixel text-xs">
+                    ✓ ĐÃ SAO CHÉP SỐ ĐIỆN THOẠI: {INVITATION_CONFIG.phone}
+                  </span>
+                </div>
+              )}
+
+              {accepted && (
+                <div className="mt-8 rounded-2xl bg-gradient-to-r from-emerald-500/20 via-amber-400/20 to-emerald-500/20 border-2 border-amber-300 p-6 sm:p-8 text-center animate-float-slow">
+                  <div className="font-pixel text-2xl sm:text-3xl text-amber-300 mb-2">
+                    QUEST COMPLETED!
+                  </div>
+                  <div className="font-pixel text-base sm:text-lg text-emerald-300 mb-2">
+                    {INVITATION_CONFIG.dateDots}
+                  </div>
+                  <p className="font-pixel text-xs sm:text-sm text-warmWhite tracking-wider">
+                    THANK YOU FOR BEING PART OF OUR STORY.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // =========================================================================
+    // 7. REAL-TIME COUNTDOWN SECTION (UTC+7 Target: 29/11/2026 07:30:00)
+    // =========================================================================
+    function CountdownSection() {
+      const computeTimeState = () => {
+        const now = Date.now();
+        const startMs = new Date(INVITATION_CONFIG.targetStartISO).getTime();
+        const endMs = new Date(INVITATION_CONFIG.targetEndISO).getTime();
+
+        if (now >= endMs) {
+          return { status: "ENDED", days: 0, hours: 0, minutes: 0, seconds: 0 };
+        }
+        if (now >= startMs) {
+          return { status: "LIVE", days: 0, hours: 0, minutes: 0, seconds: 0 };
+        }
+
+        const diff = Math.max(0, startMs - now);
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+        return { status: "COUNTING", days, hours, minutes, seconds };
+      };
+
+      const [timeState, setTimeState] = useState(computeTimeState);
+
+      useEffect(() => {
+        const timer = setInterval(() => {
+          setTimeState(computeTimeState());
+        }, 1000);
+        return () => clearInterval(timer);
+      }, []);
+
+      const pad2 = (n) => String(n).padStart(2, "0");
+
+      return (
+        <section id="countdown-section" className="relative py-20 px-4 sm:px-6">
+          <div className="max-w-5xl mx-auto">
+            <div className="voxel-panel rounded-3xl p-6 sm:p-10 border-2 border-cyan-400/35 text-center">
+              <div className="inline-block px-3.5 py-1 rounded-full bg-cyan-400/15 border border-cyan-400/35 font-pixel text-[11px] text-cyan-300 mb-3">
+                REAL-TIME CHRONOMETER • UTC+7
+              </div>
+
+              <h2 className="font-pixel text-xl sm:text-3xl text-warmWhite mb-2">
+                COUNTDOWN TO {INVITATION_CONFIG.dateDisplay} • {INVITATION_CONFIG.startTime}
+              </h2>
+              <p className="text-slate-400 text-sm mb-8">
+                Hành trình tại <span className="text-warmWhite font-semibold">{INVITATION_CONFIG.location}</span> cùng{" "}
+                <span className="text-emerald-300 font-semibold">{INVITATION_CONFIG.organizer}</span>
+              </p>
+
+              {timeState.status === "LIVE" && (
+                <div className="py-8 px-4 rounded-2xl bg-emerald-500/20 border-2 border-emerald-400 animate-pulse">
+                  <div className="font-pixel text-2xl sm:text-4xl text-emerald-300">
+                    THE BIG DAY IS HERE!
+                  </div>
+                </div>
+              )}
+
+              {timeState.status === "ENDED" && (
+                <div className="py-8 px-4 rounded-2xl bg-purple-500/20 border-2 border-purple-400">
+                  <div className="font-pixel text-2xl sm:text-4xl text-purple-200">
+                    THANK YOU FOR THE MEMORIES!
+                  </div>
+                </div>
+              )}
+
+              {timeState.status === "COUNTING" && (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+                  {[
+                    { label: "DAYS", value: timeState.days, accent: "border-emerald-400/50 text-emerald-300" },
+                    { label: "HOURS", value: pad2(timeState.hours), accent: "border-cyan-400/50 text-cyan-300" },
+                    { label: "MINUTES", value: pad2(timeState.minutes), accent: "border-purple-400/50 text-purple-300" },
+                    { label: "SECONDS", value: pad2(timeState.seconds), accent: "border-amber-400/50 text-amber-300" }
+                  ].map((unit) => (
+                    <div
+                      key={unit.label}
+                      className={`rounded-2xl bg-slate-900/85 border-2 ${unit.accent} p-5 sm:p-7 shadow-lg flex flex-col items-center justify-center`}
+                    >
+                      <div
+                        key={`${unit.label}-${unit.value}`}
+                        className="font-pixel text-3xl sm:text-5xl md:text-6xl text-warmWhite digit-pop mb-2"
+                      >
+                        {unit.value}
+                      </div>
+                      <div className={`font-pixel text-xs sm:text-sm tracking-widest ${unit.accent.split(" ")[1]}`}>
+                        {unit.label}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // =========================================================================
+    // 8. FULL 4-CHAPTER TIMELINE SECTION (07:30 – 19:30)
+    // =========================================================================
+    function TimelineSection() {
+      const [activeChapterId, setActiveChapterId] = useState(INVITATION_CONFIG.chapters[0].id);
+      const [scrollProgress, setScrollProgress] = useState(0);
+      const sectionRef = useRef(null);
+
+      useEffect(() => {
+        const handleScroll = () => {
+          if (!sectionRef.current) return;
+          const rect = sectionRef.current.getBoundingClientRect();
+          const winH = window.innerHeight;
+          const totalDist = rect.height - winH;
+          if (totalDist > 0) {
+            const prog = Math.min(100, Math.max(0, ((-rect.top) / totalDist) * 100));
+            setScrollProgress(Math.round(prog));
+          }
+        };
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        handleScroll();
+        return () => window.removeEventListener("scroll", handleScroll);
+      }, []);
+
+      const selectChapter = (id) => {
+        soundEngine.playClick();
+        setActiveChapterId(id);
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      };
+
+      return (
+        <section ref={sectionRef} id="timeline-section" className="relative py-24 px-4 sm:px-6">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-10">
+              <div className="inline-block px-4 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-400/35 font-pixel text-xs text-emerald-300 mb-3">
+                FULL DAY SCHEDULE • {INVITATION_CONFIG.dateDisplay}
+              </div>
+              <h2 className="font-pixel text-2xl sm:text-4xl md:text-5xl text-warmWhite mb-2">
+                THE JOURNEY OF OUR YOUTH
+              </h2>
+              <p className="font-pixel text-xs sm:text-sm text-amber-300 tracking-widest">
+                A DAY, A THOUSAND MEMORIES.
+              </p>
+            </div>
+
+            <div className="voxel-panel rounded-2xl p-4 mb-10 sticky top-16 z-30 border border-white/15">
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                <div className="flex flex-wrap gap-1.5">
+                  {INVITATION_CONFIG.chapters.map((ch, idx) => {
+                    const isSelected = activeChapterId === ch.id;
+                    return (
+                      <button
+                        key={ch.id}
+                        onClick={() => selectChapter(ch.id)}
+                        className={`px-3 py-1.5 rounded-xl font-pixel text-[10px] sm:text-xs transition-all ${
+                          isSelected
+                            ? "bg-emerald-500 text-slate-950 font-bold shadow-voxel-emerald"
+                            : "bg-white/5 text-slate-300 hover:bg-white/10"
+                        }`}
+                      >
+                        0{idx + 1}: {ch.timeRange}
+                      </button>
+                    );
+                  })}
+                  <button
+                    onClick={() => selectChapter("final-moment")}
+                    className={`px-3 py-1.5 rounded-xl font-pixel text-[10px] sm:text-xs transition-all ${
+                      activeChapterId === "final-moment"
+                        ? "bg-amber-400 text-slate-950 font-bold"
+                        : "bg-white/5 text-amber-300 hover:bg-white/10"
+                    }`}
+                  >
+                    19:30 END
+                  </button>
+                </div>
+                <span className="font-pixel text-[11px] text-cyan-300">
+                  PROGRESS: {scrollProgress}%
+                </span>
+              </div>
+
+              <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-amber-400 via-emerald-400 to-indigo-400 transition-all duration-150"
+                  style={{ width: `${scrollProgress}%` }}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-8">
+              {INVITATION_CONFIG.chapters.map((chapter) => {
+                const isActive = activeChapterId === chapter.id;
+                return (
+                  <div
+                    key={chapter.id}
+                    id={chapter.id}
+                    onMouseEnter={() => setActiveChapterId(chapter.id)}
+                    onClick={() => setActiveChapterId(chapter.id)}
+                    className={`voxel-panel ${chapter.themeClass} rounded-3xl p-6 sm:p-8 border-2 transition-all cursor-pointer ${
+                      isActive ? "border-emerald-400/70 scale-[1.01]" : "border-white/10 hover:border-white/25"
+                    }`}
+                  >
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 pb-4 mb-5 border-b border-white/10">
+                      <div>
+                        <span className="font-pixel text-xs text-amber-300 tracking-wider">
+                          {chapter.code} – {chapter.title}
+                        </span>
+                        <h3 className="text-xl sm:text-2xl font-extrabold text-warmWhite mt-0.5">
+                          {chapter.costume}
+                        </h3>
+                      </div>
+                      <div className="inline-flex items-center px-4 py-1.5 rounded-xl bg-slate-950/70 border border-emerald-400/40 font-pixel text-xs sm:text-sm text-emerald-300 self-start md:self-auto">
+                        ⏰ {chapter.timeRange}
+                      </div>
+                    </div>
+
+                    <div className="space-y-3 mb-5">
+                      {chapter.events.map((ev, idx) => (
+                        <div
+                          key={idx}
+                          className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 p-3.5 rounded-2xl bg-slate-950/55 border border-white/10"
+                        >
+                          <span className="font-pixel text-xs sm:text-sm text-cyan-300 min-w-[130px]">
+                            {ev.time}
+                          </span>
+                          <span className="text-sm sm:text-base text-warmWhite font-medium">
+                            {ev.desc}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="text-xs sm:text-sm text-slate-300 italic flex items-center gap-2">
+                      <span className="font-pixel text-[10px] not-italic px-2 py-0.5 rounded bg-white/10 text-amber-200">
+                        VISUAL
+                      </span>
+                      <span>{chapter.visualNote}</span>
+                    </div>
+                  </div>
+                );
+              })}
+
+              <div
+                id="final-moment"
+                onClick={() => setActiveChapterId("final-moment")}
+                className={`voxel-panel rounded-3xl p-6 sm:p-8 border-2 transition-all cursor-pointer bg-gradient-to-br from-indigo-950/60 via-slate-900/80 to-slate-950 ${
+                  activeChapterId === "final-moment" ? "border-amber-400" : "border-white/15"
+                }`}
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-4 mb-4 border-b border-white/10">
+                  <div>
+                    <span className="font-pixel text-xs text-amber-300 tracking-wider">
+                      {INVITATION_CONFIG.finalMoment.code} – {INVITATION_CONFIG.finalMoment.time}
+                    </span>
+                    <h3 className="text-xl sm:text-2xl font-extrabold text-warmWhite mt-0.5">
+                      {INVITATION_CONFIG.finalMoment.title}
+                    </h3>
+                  </div>
+                  <span className="px-4 py-1.5 rounded-xl bg-amber-400/20 border border-amber-400/40 font-pixel text-xs text-amber-300 self-start sm:self-auto">
+                    {INVITATION_CONFIG.finalMoment.time}
+                  </span>
+                </div>
+
+                <p className="text-base sm:text-lg text-warmWhite font-medium mb-3">
+                  {INVITATION_CONFIG.finalMoment.desc}
+                </p>
+                <p className="text-xs sm:text-sm text-slate-400 italic">
+                  Visual: {INVITATION_CONFIG.finalMoment.visualNote}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // =========================================================================
+    // 9. YEARBOOK GALLERY SECTION (4-Column x 2-Row Concept Placeholder Grid + Lightbox)
+    // =========================================================================
+    function GallerySection() {
+      const [slots, setSlots] = useState(
+        INVITATION_CONFIG.gallerySlots.map((item) => ({
+          ...item,
+          customImageUrl: null
+        }))
+      );
+      // Ảnh cố định: đặt file assets/photos/<id>.jpg (vd slot-01a.jpg), ai mở link cũng thấy
+      useEffect(() => {
+        INVITATION_CONFIG.gallerySlots.forEach((item) => {
+          const url = `assets/photos/${item.id}.jpg`;
+          const probe = new Image();
+          probe.onload = () =>
+            setSlots((prev) =>
+              prev.map((s) => (s.id === item.id && !s.customImageUrl ? { ...s, customImageUrl: url } : s))
+            );
+          probe.src = url;
+        });
+      }, []);
+      const [activeFilter, setActiveFilter] = useState("ALL");
+      const [lightboxIdx, setLightboxIdx] = useState(null);
+      const quickUploadRef = useRef(null);
+
+      const handleSlotUpload = (slotId, e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const objectUrl = URL.createObjectURL(file);
+        setSlots((prev) =>
+          prev.map((s) => (s.id === slotId ? { ...s, customImageUrl: objectUrl } : s))
+        );
+        soundEngine.playCollect(2);
+      };
+
+      const handleQuickPreviewUpload = (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const objectUrl = URL.createObjectURL(file);
+        const targetId =
+          activeFilter === "ALL"
+            ? slots[0]?.id
+            : slots.find((s) => s.chapterId === activeFilter)?.id || slots[0]?.id;
+        if (!targetId) return;
+        setSlots((prev) =>
+          prev.map((s) => (s.id === targetId ? { ...s, customImageUrl: objectUrl } : s))
+        );
+        soundEngine.playCollect(2);
+      };
+
+      const visibleSlots =
+        activeFilter === "ALL"
+          ? slots
+          : slots.filter((s) => s.chapterId === activeFilter);
+
+      const openLightbox = (slot) => {
+        const idx = slots.findIndex((s) => s.id === slot.id);
+        soundEngine.playClick();
+        setLightboxIdx(idx >= 0 ? idx : 0);
+      };
+
+      const stepLightbox = (dir) => {
+        soundEngine.playPageFlip();
+        setLightboxIdx((prev) => (prev + dir + slots.length) % slots.length);
+      };
+
+      const filterTabs = [
+        { id: "ALL", label: "ALL CHAPTERS" },
+        { id: "01", label: "01 - CLASS MEMORIES" },
+        { id: "02", label: "02 - FAMILY & FRIENDS" },
+        { id: "03", label: "03 - THE GOLDEN YOUTH" },
+        { id: "04", label: "04 - LAST NIGHT" }
+      ];
+
+      return (
+        <section id="gallery-section" className="relative py-24 px-4 sm:px-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-8">
+              <div className="inline-block px-4 py-1 rounded-full bg-purple-500/15 border border-purple-400/35 font-pixel text-[10px] sm:text-xs text-purple-300 tracking-wider mb-3">
+                YEARBOOK GALLERY • {INVITATION_CONFIG.eventName}
+              </div>
+              <h2 className="font-pixel text-2xl sm:text-4xl text-warmWhite tracking-wide mb-3">
+                ALBUM KỶ YẾU 2026
+              </h2>
+              <p className="text-slate-300 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed mb-6">
+                Các khung hình dưới đây là{" "}
+                <span className="font-semibold text-warmWhite">Concept Preview / Placeholder</span>{" "}
+                chuẩn bị cho bộ ảnh Kỷ Yếu 2026. Bạn cũng có thể thử tải ảnh JPG/PNG/WEBP từ máy lên để xem thử trong khung Minecraft!
+              </p>
+
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+                {filterTabs.map((tab) => {
+                  const isActive = activeFilter === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => {
+                        soundEngine.playClick();
+                        setActiveFilter(tab.id);
+                      }}
+                      className={`px-3.5 py-2 rounded-lg font-pixel text-[10px] sm:text-xs transition-all ${
+                        isActive
+                          ? "bg-emerald-500 text-slate-950 font-bold shadow-md"
+                          : "bg-slate-900/90 text-slate-300 border border-white/10 hover:border-emerald-400/50 hover:text-warmWhite"
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  );
+                })}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundEngine.playClick();
+                    quickUploadRef.current?.click();
+                  }}
+                  className="px-3.5 py-2 rounded-lg font-pixel text-[10px] sm:text-xs bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold shadow-md transition-all"
+                >
+                  + THÊM ẢNH XEM THỬ
+                </button>
+                <input
+                  ref={quickUploadRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={handleQuickPreviewUpload}
+                  className="hidden"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {visibleSlots.map((slot) => (
+                <article
+                  key={slot.id}
+                  onClick={() => openLightbox(slot)}
+                  className="group cursor-pointer rounded-2xl bg-[#0D1322]/90 border border-white/10 hover:border-amber-400/50 p-3 transition-all shadow-xl flex flex-col justify-between"
+                >
+                  <div
+                    className="relative aspect-[4/3] w-full rounded-xl overflow-hidden mb-3.5 border border-white/10 flex flex-col justify-between p-3"
+                    style={{
+                      background: `linear-gradient(155deg, ${slot.accentHex}24 0%, #10182A 55%, #090E1A 100%)`
+                    }}
+                  >
+                    {slot.customImageUrl ? (
+                      <img
+                        src={slot.customImageUrl}
+                        alt={slot.title}
+                        className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <>
+                        <div className="flex items-center justify-between z-10">
+                          <span className="font-pixel text-[9px] text-slate-200 bg-black/45 px-2 py-0.5 rounded">
+                            {slot.chapterLabel}
+                          </span>
+                        </div>
+
+                        <div className="my-auto text-center z-10">
+                          <div
+                            className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-black/45 border border-white/15 font-pixel text-xl sm:text-2xl font-bold mb-2"
+                            style={{ color: slot.accentHex }}
+                          >
+                            {slot.code}
+                          </div>
+                          <div>
+                            <span className="inline-block px-2.5 py-0.5 rounded bg-black/55 border border-white/10 font-pixel text-[8px] text-slate-300 tracking-wider">
+                              CONCEPT PLACEHOLDER
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-end z-10">
+                          <label
+                            onClick={(e) => e.stopPropagation()}
+                            className="cursor-pointer font-pixel text-[8px] px-2 py-0.5 rounded bg-black/55 hover:bg-amber-400 hover:text-slate-950 text-amber-200 transition-colors"
+                          >
+                            ĐỔI ẢNH
+                            <input
+                              type="file"
+                              accept="image/jpeg,image/png,image/webp"
+                              onChange={(e) => handleSlotUpload(slot.id, e)}
+                              className="hidden"
+                            />
+                          </label>
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  <div className="px-1 pb-1">
+                    <h3 className="text-sm font-bold text-warmWhite truncate mb-1">
+                      {slot.title}
+                    </h3>
+                    <p className="text-[11px] text-slate-400 leading-snug line-clamp-2">
+                      <span className="text-slate-300 font-medium">Concept Preview (Placeholder):</span>{" "}
+                      {slot.desc}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          {lightboxIdx !== null && (
+            <div
+              className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4"
+              onClick={() => setLightboxIdx(null)}
+            >
+              <div
+                className="voxel-panel max-w-3xl w-full rounded-3xl p-5 sm:p-8 border border-amber-400/50 relative"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <span className="font-pixel text-xs sm:text-sm text-amber-300 block">
+                      {slots[lightboxIdx].chapterLabel}
+                    </span>
+                    <h3 className="text-lg sm:text-xl font-bold text-warmWhite">
+                      {slots[lightboxIdx].title}
+                    </h3>
+                  </div>
+                  <button
+                    onClick={() => setLightboxIdx(null)}
+                    className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-red-500/30 text-warmWhite font-pixel text-xs"
+                  >
+                    CLOSE ✕
+                  </button>
+                </div>
+
+                <div className="aspect-[16/9] w-full rounded-2xl overflow-hidden bg-slate-950 border border-white/15 flex items-center justify-center">
+                  {slots[lightboxIdx].customImageUrl ? (
+                    <img
+                      src={slots[lightboxIdx].customImageUrl}
+                      alt={slots[lightboxIdx].title}
+                      className="w-full h-full object-contain"
+                    />
+                  ) : (
+                    <div
+                      className="w-full h-full flex flex-col items-center justify-center p-8 text-center"
+                      style={{
+                        background: `radial-gradient(circle at center, ${slots[lightboxIdx].accentHex}38, #070B19 80%)`
+                      }}
+                    >
+                      <div
+                        className="font-pixel text-4xl sm:text-5xl font-bold mb-2"
+                        style={{ color: slots[lightboxIdx].accentHex }}
+                      >
+                        {slots[lightboxIdx].code}
+                      </div>
+                      <div className="font-pixel text-xs text-slate-300 mb-3">
+                        CONCEPT PLACEHOLDER
+                      </div>
+                      <p className="text-slate-200 max-w-md text-sm sm:text-base leading-relaxed">
+                        {slots[lightboxIdx].desc}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+                  <button
+                    onClick={() => stepLightbox(-1)}
+                    className="voxel-btn px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 font-pixel text-xs text-warmWhite"
+                  >
+                    ◀ PREVIOUS
+                  </button>
+                  <span className="text-xs text-slate-400 font-mono">
+                    {lightboxIdx + 1} / {slots.length}
+                  </span>
+                  <button
+                    onClick={() => stepLightbox(1)}
+                    className="voxel-btn px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 font-pixel text-xs text-warmWhite"
+                  >
+                    NEXT ▶
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </section>
+      );
+    }
+
+    // =========================================================================
+    // 10. MINECRAFT BOOK & QUILL OPEN-SPREAD GUESTBOOK GUI
+    // =========================================================================
+    function GuestbookSection() {
+      const [entries, setEntries] = useState([
+        {
+          id: 1,
+          name: "Nguyễn Phi Hùng (Host)",
+          attending: "Tham dự đầy đủ",
+          message: "Hẹn gặp tất cả mọi người vào 07:30 ngày 29/11/2026 tại THPT Cẩm Lí! Cùng nhau tạo nên thí nghiệm thanh xuân rực rỡ nhất nhé!",
+          isSample: true
+        },
+        {
+          id: 2,
+          name: "Thành viên Lớp 12",
+          attending: "Tham dự đầy đủ",
+          message: "Ba năm trôi qua nhanh như một cái chớp mắt. Chúc tập thể chúng ta có một bộ ảnh kỷ yếu thật cháy và thật nhiều kỷ niệm đẹp!",
+          isSample: true
+        },
+        {
+          id: 3,
+          name: "Hội Bạn Thanh Xuân",
+          attending: "Tham dự buổi chiều & tối",
+          message: "Chiều 14:00 concept Thanh xuân và tối 17:30 đêm tâm sự — không thể thiếu mặt ai đâu đấy!",
+          isSample: false
+        },
+        {
+          id: 4,
+          name: "Cựu Học Sinh Đồng Hành",
+          attending: "Gửi lời chúc từ xa",
+          message: "Chúc 29/11/2026 tại THPT Cẩm Lí diễn ra thật trọn vẹn và rực rỡ như phản ứng Nhiệt Nhôm 2500°C!",
+          isSample: false
+        }
+      ]);
+      const [pageSpreadIdx, setPageSpreadIdx] = useState(0);
+      const [name, setName] = useState("");
+      const [attending, setAttending] = useState("Tham dự đầy đủ (07:30 – 19:30)");
+      const [message, setMessage] = useState("");
+      const [submittedToast, setSubmittedToast] = useState(false);
+
+      const perSpread = 2;
+      const totalSpreads = Math.max(1, Math.ceil(entries.length / perSpread));
+      const safeSpread = Math.min(pageSpreadIdx, totalSpreads - 1);
+      const visibleWishes = entries.slice(
+        safeSpread * perSpread,
+        safeSpread * perSpread + perSpread
+      );
+
+      const handleFlipPage = () => {
+        soundEngine.playPageFlip();
+        setPageSpreadIdx((prev) => (prev + 1) % totalSpreads);
+      };
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!name.trim() || !message.trim()) return;
+        soundEngine.playCollect(3);
+
+        const shortAttending = attending.includes("(")
+          ? attending.split("(")[0].trim()
+          : attending;
+
+        const newEntry = {
+          id: Date.now(),
+          name: name.trim(),
+          attending: shortAttending,
+          message: message.trim(),
+          isSample: false
+        };
+
+        const updated = [newEntry, ...entries];
+        setEntries(updated);
+        setPageSpreadIdx(0);
+        setName("");
+        setMessage("");
+        setSubmittedToast(true);
+        setTimeout(() => setSubmittedToast(false), 3000);
+      };
+
+      return (
+        <section id="guestbook-section" className="relative py-24 px-4 sm:px-6">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-10">
+              <div className="inline-block px-4 py-1 rounded-full bg-amber-500/10 border border-amber-400/35 font-pixel text-[10px] sm:text-xs text-amber-300 tracking-wider mb-3">
+                BOOK & QUILL · ENCHANTED ARCHIVE
+              </div>
+              <h2 className="font-pixel text-2xl sm:text-4xl md:text-5xl text-warmWhite tracking-wide mb-2.5">
+                SỔ LƯU BÚT & XÁC NHẬN THAM DỰ
+              </h2>
+              <p className="text-slate-300 text-xs sm:text-sm">
+                Viết lại lời nhắn gửi thanh xuân và xác nhận tham gia cùng tập thể tại{" "}
+                <span className="text-emerald-400 font-semibold">{INVITATION_CONFIG.location}</span>.
+              </p>
+            </div>
+
+            <div className="rounded-[24px] p-3 sm:p-4 bg-[#4A2208] border-2 border-[#6B3410] shadow-[0_24px_60px_rgba(0,0,0,0.75)]">
+              <div className="grid grid-cols-1 lg:grid-cols-2 rounded-[16px] overflow-hidden minecraft-parchment relative border border-[#C5A776]">
+                <div className="hidden lg:block absolute inset-y-0 left-1/2 -translate-x-1/2 w-8 bg-gradient-to-r from-black/15 via-black/25 to-black/15 pointer-events-none z-10" />
+
+                <div className="p-6 sm:p-8 lg:pr-10 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#C9AD80]/70">
+                  <div>
+                    <div className="flex items-center justify-between pb-2.5 mb-5 border-b border-[#C9AD80]">
+                      <span className="font-pixel text-[11px] sm:text-xs text-[#5A3A1E] tracking-wider">
+                        PAGE 01 · SIGN THE BOOK
+                      </span>
+                      <span className="font-pixel text-[11px] sm:text-xs text-[#6E4B2A]">
+                        {INVITATION_CONFIG.dateDisplay}
+                      </span>
+                    </div>
+
+                    <form id="book-sign-form" onSubmit={handleSubmit} className="space-y-4">
+                      <div>
+                        <label className="block font-pixel text-[10px] sm:text-[11px] text-[#5A3A1E] mb-1.5 tracking-wide">
+                          TÊN CỦA BẠN *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          placeholder="Nhập họ tên hoặc biệt danh..."
+                          className="w-full px-4 py-2.5 rounded-lg bg-[#FFFDF7] border border-[#D4BC94] text-[#2B1D0E] placeholder-[#9B8567] focus:outline-none focus:border-[#0F766E] text-xs sm:text-sm"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block font-pixel text-[10px] sm:text-[11px] text-[#5A3A1E] mb-1.5 tracking-wide">
+                          XÁC NHẬN THAM DỰ
+                        </label>
+                        <select
+                          value={attending}
+                          onChange={(e) => setAttending(e.target.value)}
+                          className="w-full px-4 py-2.5 rounded-lg bg-[#FFFDF7] border border-[#D4BC94] text-[#2B1D0E] focus:outline-none focus:border-[#0F766E] text-xs sm:text-sm font-medium"
+                        >
+                          <option value="Tham dự đầy đủ (07:30 – 19:30)">Tham dự đầy đủ (07:30 – 19:30)</option>
+                          <option value="Tham dự buổi sáng (07:30 – 11:30)">Tham dự buổi sáng (07:30 – 11:30)</option>
+                          <option value="Tham dự buổi chiều & tối (14:00 – 19:30)">Tham dự buổi chiều & tối (14:00 – 19:30)</option>
+                          <option value="Gửi lời chúc từ xa">Gửi lời chúc từ xa</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block font-pixel text-[10px] sm:text-[11px] text-[#5A3A1E] mb-1.5 tracking-wide">
+                          LỜI NHẮN GỬI THANH XUÂN *
+                        </label>
+                        <textarea
+                          rows="3"
+                          required
+                          value={message}
+                          onChange={(e) => setMessage(e.target.value)}
+                          placeholder="Viết những điều bạn muốn lưu giữ cùng lớp mình..."
+                          className="w-full px-4 py-2.5 rounded-lg bg-[#FFFDF7] border border-[#D4BC94] text-[#2B1D0E] placeholder-[#9B8567] focus:outline-none focus:border-[#0F766E] text-xs sm:text-sm resize-none"
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="voxel-btn w-full py-3 rounded-lg bg-[#0B7A56] hover:bg-[#096748] text-[#FFFDF7] font-pixel text-[11px] sm:text-xs font-bold tracking-wider shadow-[0_3px_0_#054631] flex items-center justify-center gap-2"
+                      >
+                        <span>GỬI LỜI CHÚC & XÁC NHẬN</span>
+                        <span>✎</span>
+                      </button>
+
+                      {submittedToast && (
+                        <div className="text-center font-pixel text-[10px] text-[#0B7A56]">
+                          ✓ ĐÃ LƯU LỜI CHÚC VÀO SỔ LƯU BÚT!
+                        </div>
+                      )}
+                    </form>
+                  </div>
+                </div>
+
+                <div className="p-6 sm:p-8 lg:pl-10 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between pb-2.5 mb-5 border-b border-[#C9AD80]">
+                      <span className="font-pixel text-[11px] sm:text-xs text-[#5A3A1E] tracking-wider">
+                        PAGE 02 · ARCHIVED WISHES ({entries.length})
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleFlipPage}
+                        className="px-2.5 py-1 rounded bg-[#E8D5B0] hover:bg-[#DEC699] border border-[#C6A878] font-pixel text-[10px] text-[#4E3219] transition-colors flex items-center gap-1"
+                      >
+                        <span>FLIP PAGE</span>
+                        <span>↻</span>
+                      </button>
+                    </div>
+
+                    <div className="space-y-3.5">
+                      {visibleWishes.map((wish) => (
+                        <div
+                          key={wish.id}
+                          className="rounded-xl bg-[#FAF2DC] border border-[#DFC79E] p-4 shadow-[0_2px_6px_rgba(90,58,30,0.06)]"
+                        >
+                          <div className="flex items-center justify-between gap-2 mb-1.5">
+                            <h4 className="font-bold text-sm sm:text-[15px] text-[#2B1D0E]">
+                              {wish.name}
+                            </h4>
+                            <span className="shrink-0 px-2.5 py-0.5 rounded-md bg-[#D8EFE4] text-[#0E6B4D] text-[10px] font-semibold">
+                              {wish.attending}
+                            </span>
+                          </div>
+                          <p className="text-xs sm:text-[13px] text-[#3F2B16] leading-relaxed mb-1.5">
+                            "{wish.message}"
+                          </p>
+                          {wish.isSample && (
+                            <div className="text-[10px] text-[#8E7453]">
+                              Lời nhắn mẫu từ Ban Tổ Chức
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-4 mt-6 border-t border-[#C9AD80]/80 text-[10px] text-[#856B4B] leading-relaxed">
+                    Lưu ý: Dữ liệu hiện lưu cục bộ trên trình duyệt (LocalStorage). Sẵn sàng kết nối Supabase/Firebase qua biến môi trường khi triển khai backend.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // =========================================================================
+    // 11. MAIN APPLICATION COMPONENT
+    // =========================================================================
+    function App() {
+      const [stage, setStage] = useState("intro");
+      const [collectedElements, setCollectedElements] = useState([]);
+      const [lowGraphics, setLowGraphics] = useState(false);
+      const [isPlaying, setIsPlaying] = useState(false);
+      const [isMuted, setIsMuted] = useState(false);
+      const [volume, setVolume] = useState(0.55);
+      const [trackName, setTrackName] = useState(soundEngine.trackName);
+      const [accepted, setAccepted] = useState(false);
+      const [copiedToast, setCopiedToast] = useState(false);
+      const [fireworksActive, setFireworksActive] = useState(false);
+      const [questFeedback, setQuestFeedback] = useState("");
+      const [postBurnQuoteVisible, setPostBurnQuoteVisible] = useState(false);
+      const [skyMood, setSkyMood] = useState("dawn");
+
+      const allElementsCollected = collectedElements.length >= 3;
+
+      const handleEnterWorld = () => {
+        soundEngine.playClick();
+        soundEngine.startMusic();
+        setIsPlaying(true);
+        setStage("lab");
+        setPostBurnQuoteVisible(false);
+        setQuestFeedback(
+          "Thí nghiệm Nhiệt Nhôm: Hãy thu thập đủ [Al], [Fe₂O₃] và dải mồi [Mg] đang bay lơ lửng!"
+        );
+      };
+
+      const handleUploadMp3 = (file) => {
+        soundEngine.setCustomTrack(file);
+        setTrackName(soundEngine.trackName);
+        setIsPlaying(true);
+        if (stage !== "intro") {
+          setQuestFeedback(`🎵 Đã thay nhạc nền sang: "${soundEngine.trackName}"`);
+        }
+      };
+
+      const handleCollectElement = useCallback((symbol) => {
+        setCollectedElements((prev) => {
+          if (prev.includes(symbol)) return prev;
+          const next = [...prev, symbol];
+          soundEngine.playCollect(next.length - 1);
+          const displayMap = { Al: "Al", Fe2O3: "Fe₂O₃", Mg: "Mg" };
+          if (next.length === 3) {
+            setQuestFeedback(
+              "Đã đủ Al + Fe₂O₃ + Mg! Nhấn vào Bàn Chế Tạo (Crafting Table) để châm ngòi Phản ứng Nhiệt Nhôm!"
+            );
+          } else {
+            setQuestFeedback(`Đã thu thập chất phản ứng [${displayMap[symbol] || symbol}] (${next.length}/3)!`);
+          }
+          return next;
+        });
+      }, []);
+
+      const handleSynthesize = useCallback(() => {
+        if (collectedElements.length < 3) {
+          soundEngine.playClick();
+          setQuestFeedback("Bạn cần thu thập đủ Al, Fe₂O₃ và Mg trước khi châm ngòi phản ứng!");
+          return;
+        }
+        soundEngine.playCraft();
+        setPostBurnQuoteVisible(false);
+        setStage("thermite_ignited");
+        setQuestFeedback("🔥 BÙNG LỬA NHIỆT NHÔM (2500°C): 2Al + Fe₂O₃ → Al₂O₃ + 2Fe! Đang chuyển hóa...");
+
+        setTimeout(() => {
+          setStage("crafted");
+          setPostBurnQuoteVisible(true);
+          setQuestFeedback(
+            "Phản ứng đã cháy xong & chuyển hóa hoàn tất! Rương Kho Báu đã xuất hiện — hãy click để mở thiệp mời."
+          );
+        }, 2100);
+      }, [collectedElements.length]);
+
+      const handleOpenChest = useCallback(() => {
+        soundEngine.playChestOpen();
+        setStage("chest_opened");
+        setQuestFeedback("Rương thiệp mời đã mở! Kéo xuống hoặc nhấn nút bên dưới để xem chi tiết thiệp mời.");
+      }, []);
+
+      const handleSkipToChest = () => {
+        soundEngine.playCraft();
+        setCollectedElements(["Al", "Fe2O3", "Mg"]);
+        setStage("chest_opened");
+        setPostBurnQuoteVisible(true);
+        setQuestFeedback("Đã kích hoạt Phản ứng Nhiệt Nhôm & mở Rương Thiệp Mời Kỷ Yếu 2026!");
+      };
+
+      const handleAcceptInvitation = () => {
+        soundEngine.playFirework();
+        setAccepted(true);
+        setStage("celebrate");
+        setFireworksActive(true);
+        setTimeout(() => setFireworksActive(false), 3200);
+      };
+
+      const handleCopyPhone = () => {
+        soundEngine.playClick();
+        const textArea = document.createElement("textarea");
+        textArea.value = INVITATION_CONFIG.phone;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+          document.execCommand("copy");
+          setCopiedToast(true);
+          setTimeout(() => setCopiedToast(false), 2500);
+        } catch (err) {
+          console.warn("Copy failed", err);
+        }
+        document.body.removeChild(textArea);
+      };
+
+      const jumpToSection = (id) => {
+        soundEngine.playClick();
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      };
+
+      return (
+        <div className="min-h-screen bg-midnight text-warmWhite selection:bg-emerald-500 selection:text-slate-950">
+          <PixelFireworksCanvas active={fireworksActive} />
+
+          <TopControlHUD
+            isPlaying={isPlaying}
+            isMuted={isMuted}
+            volume={volume}
+            lowGraphics={lowGraphics}
+            trackName={trackName}
+            onToggleMusic={() => setIsPlaying(soundEngine.toggleMusic())}
+            onUploadMp3={handleUploadMp3}
+            onToggleMute={() => setIsMuted(soundEngine.toggleMute())}
+            onChangeVolume={(v) => {
+              setVolume(v);
+              soundEngine.setVolume(v);
+            }}
+            onToggleGraphics={() => {
+              soundEngine.playClick();
+              setLowGraphics((prev) => !prev);
+            }}
+            onJumpSection={jumpToSection}
+          />
+
+          <section id="hero-lab" className="relative w-full h-screen min-h-[640px] overflow-hidden">
+            <div className="absolute inset-0 z-0">
+              <MinecraftLab3DScene
+                stage={stage}
+                collectedElements={collectedElements}
+                onCollectElement={handleCollectElement}
+                onClickCraftingTable={handleSynthesize}
+                onOpenChest={handleOpenChest}
+                skyMood={skyMood}
+                lowGraphics={lowGraphics}
+              />
+            </div>
+
+            <div className="absolute inset-0 bg-gradient-to-t from-midnight via-transparent to-midnight/45 pointer-events-none z-10" />
+
+            {stage === "thermite_ignited" && (
+              <div className="absolute inset-0 z-15 pointer-events-none bg-gradient-to-t from-amber-500/35 via-orange-400/20 to-white/25 animate-pulse" />
+            )}
+
+            {stage === "intro" && (
+              <div className="relative z-20 h-full flex flex-col items-center justify-center text-center px-4">
+                <div className="voxel-panel rounded-3xl p-7 sm:p-11 max-w-2xl border-2 border-amber-400/45 animate-float-slow">
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-400/40 font-pixel text-[11px] sm:text-xs text-amber-300 mb-4">
+                    <span>MINECRAFT SHADERS × THERMITE ALCHEMY</span>
+                  </div>
+
+                  <h1 className="font-pixel text-3xl sm:text-5xl md:text-6xl text-warmWhite tracking-wide leading-tight mb-2">
+                    {INVITATION_CONFIG.projectName}
+                  </h1>
+
+                  <p className="font-pixel text-xs sm:text-sm text-cyan-300 tracking-widest mb-3">
+                    {INVITATION_CONFIG.subtitle}
+                  </p>
+
+                  <div className="inline-block px-3 py-1 rounded-lg bg-orange-500/20 border border-orange-400/40 font-pixel text-xs text-amber-200 mb-3">
+                    {INVITATION_CONFIG.thermiteEquation}
+                  </div>
+
+                  <blockquote className="max-w-xl mx-auto my-4 px-4 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-emerald-500/10 to-amber-500/15 border border-amber-300/35 text-amber-100 text-sm sm:text-base md:text-lg font-semibold leading-relaxed italic shadow-lg">
+                    "{INVITATION_CONFIG.thermiteQuote}"
+                  </blockquote>
+
+                  <div className="font-pixel text-lg sm:text-xl text-emerald-300 mb-6">
+                    {INVITATION_CONFIG.dateDots} • {INVITATION_CONFIG.location}
+                  </div>
+
+                  <button
+                    onClick={handleEnterWorld}
+                    className="voxel-btn px-8 py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-pixel text-sm sm:text-base font-bold shadow-voxel-emerald tracking-wider"
+                  >
+                    ENTER THE WORLD ▶
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {stage !== "intro" && (
+              <div className="relative z-20 h-full flex flex-col justify-between pt-20 pb-6 px-4 sm:px-6 pointer-events-none">
+                <div className="max-w-4xl mx-auto w-full flex flex-col items-center gap-2 pointer-events-auto">
+                  <div className="voxel-panel rounded-2xl px-4 py-3 border border-amber-400/40 text-center">
+                    <div className="font-pixel text-[10px] text-amber-300 tracking-wider mb-1">
+                      {INVITATION_CONFIG.thermiteEquation}
+                    </div>
+                    <p className="text-xs sm:text-sm text-warmWhite font-medium">
+                      {questFeedback}
+                    </p>
+                  </div>
+
+                  {postBurnQuoteVisible && (
+                    <div className="voxel-panel rounded-2xl px-5 py-3.5 max-w-2xl border-2 border-amber-300/60 bg-gradient-to-r from-amber-500/20 via-orange-500/15 to-emerald-500/20 text-center shadow-voxel-gold animate-float-slow">
+                      <div className="font-pixel text-[10px] text-amber-300 tracking-widest mb-1">
+                        ✦ AFTER THE TRANSFORMATION ✦
+                      </div>
+                      <p className="text-xs sm:text-base md:text-lg text-amber-100 font-semibold italic leading-snug">
+                        "{INVITATION_CONFIG.postBurnQuote}"
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="voxel-panel px-2 py-1 rounded-xl flex items-center gap-1 text-[10px] font-pixel">
+                    <span className="text-slate-400 px-1.5">SHADER SKY:</span>
+                    {[
+                      { id: "dawn", label: "DAWN" },
+                      { id: "golden", label: "GOLDEN HOUR" },
+                      { id: "night", label: "STARLIGHT" }
+                    ].map((m) => (
+                      <button
+                        key={m.id}
+                        onClick={() => {
+                          soundEngine.playClick();
+                          setSkyMood(m.id);
+                        }}
+                        className={`px-2.5 py-1 rounded-lg transition-colors ${
+                          skyMood === m.id
+                            ? "bg-amber-400 text-slate-950 font-bold"
+                            : "text-slate-300 hover:bg-white/10"
+                        }`}
+                      >
+                        {m.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="max-w-4xl mx-auto w-full pointer-events-auto">
+                  <div className="voxel-panel rounded-2xl p-4 sm:p-5 border border-white/15 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="font-pixel text-[11px] text-slate-400 hidden sm:inline">
+                        REACTANTS:
+                      </span>
+                      {[
+                        { sym: "Al", label: "Al", name: "Nhôm (Aluminum)", color: "border-cyan-400 text-cyan-300 bg-cyan-500/20" },
+                        { sym: "Fe2O3", label: "Fe₂O₃", name: "Sắt(III) oxit", color: "border-orange-400 text-orange-300 bg-orange-500/20" },
+                        { sym: "Mg", label: "Mg", name: "Dải Magie mồi lửa", color: "border-amber-400 text-amber-300 bg-amber-500/20" }
+                      ].map((el) => {
+                        const hasIt = collectedElements.includes(el.sym);
+                        return (
+                          <button
+                            key={el.sym}
+                            onClick={() => handleCollectElement(el.sym)}
+                            title={`Click để thu thập ${el.name}`}
+                            className={`px-3 h-12 min-w-[3.4rem] rounded-xl border-2 font-pixel text-xs sm:text-sm font-bold transition-all flex flex-col items-center justify-center ${
+                              hasIt
+                                ? `${el.color} scale-105 shadow-lg`
+                                : "border-dashed border-slate-600 text-slate-500 hover:border-slate-400 hover:text-slate-300"
+                            }`}
+                          >
+                            <span>{el.label}</span>
+                            <span className="text-[8px] font-sans">{hasIt ? "✓" : "+"}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-center gap-2.5">
+                      {stage === "lab" && !allElementsCollected && (
+                        <button
+                          onClick={handleSkipToChest}
+                          className="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 font-pixel text-[11px] transition-colors"
+                        >
+                          MỞ NHANH RƯƠNG ⏭
+                        </button>
+                      )}
+
+                      {stage === "lab" && allElementsCollected && (
+                        <button
+                          onClick={handleSynthesize}
+                          className="voxel-btn px-5 py-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-400 hover:from-orange-400 hover:to-amber-300 text-slate-950 font-pixel text-xs font-bold shadow-voxel-gold animate-bounce"
+                        >
+                          IGNITE THERMITE 🔥
+                        </button>
+                      )}
+
+                      {stage === "thermite_ignited" && (
+                        <div className="px-5 py-3 rounded-xl bg-amber-400/20 border border-amber-300 font-pixel text-xs text-amber-200 animate-pulse">
+                          2500°C CHUYỂN HÓA...
+                        </div>
+                      )}
+
+                      {stage === "crafted" && (
+                        <button
+                          onClick={handleOpenChest}
+                          className="voxel-btn px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-pixel text-xs font-bold shadow-voxel-emerald animate-pulse"
+                        >
+                          OPEN TREASURE CHEST ✦
+                        </button>
+                      )}
+
+                      {(stage === "chest_opened" || stage === "celebrate") && (
+                        <button
+                          onClick={() => jumpToSection("invitation-section")}
+                          className="voxel-btn px-5 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-pixel text-xs font-bold shadow-voxel-gold"
+                        >
+                          XEM THIỆP MỜI CHI TIẾT ↓
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </section>
+
+          <main className="relative z-10">
+            <InvitationCardSection
+              accepted={accepted}
+              onAcceptInvitation={handleAcceptInvitation}
+              onViewSchedule={() => jumpToSection("timeline-section")}
+              onCopyPhone={handleCopyPhone}
+              copiedToast={copiedToast}
+            />
+
+            <CountdownSection />
+
+            <TimelineSection />
+
+            <GallerySection />
+
+            <GuestbookSection />
+          </main>
+
+          <footer className="border-t border-white/10 bg-slate-950/90 py-12 px-4 sm:px-6 text-center">
+            <div className="max-w-4xl mx-auto">
+              <div className="font-pixel text-lg sm:text-xl text-emerald-300 mb-2">
+                {INVITATION_CONFIG.projectName} • {INVITATION_CONFIG.eventName}
+              </div>
+              <p className="text-slate-400 text-sm mb-4">
+                Tổ chức bởi <span className="text-warmWhite font-semibold">{INVITATION_CONFIG.organizer}</span> •{" "}
+                {INVITATION_CONFIG.location} • Ngày {INVITATION_CONFIG.dateDisplay} ({INVITATION_CONFIG.startTime} – {INVITATION_CONFIG.endTime})
+              </p>
+              <div className="font-pixel text-xs text-amber-300">
+                HOTLINE: {INVITATION_CONFIG.phone}
+              </div>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>
