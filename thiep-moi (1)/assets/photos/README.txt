@@ -1,2 +1,1 @@
 Dat anh vao day, ten file dung theo o anh: slot-01a.jpg ... slot-04b.jpg (8 o).
-1795005465948_1799318965152928831_5582674936637489342_45c4b32b31f6475e3e1a33eeb2d39947
