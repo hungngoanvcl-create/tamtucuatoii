@@ -2614,6 +2614,7 @@
       const [attending, setAttending] = useState("Tham dự đầy đủ (07:30 – 19:30)");
       const [message, setMessage] = useState("");
       const [submittedToast, setSubmittedToast] = useState(false);
+      const SHEET_URL = "https://script.google.com/macros/s/AKfycbwT07bL2xrwl1iAY6neLEkr5UOqjPbnk0SAOMuLdk2AkTw6tN1Xye5OrNAdYgojM54hrA/exec";
 
       const perSpread = 2;
       const totalSpreads = Math.max(1, Math.ceil(entries.length / perSpread));
@@ -2645,6 +2646,16 @@
           isSample: false
         };
 
+        fetch(SHEET_URL, {
+  method: "POST",
+  mode: "no-cors",
+  headers: { "Content-Type": "text/plain;charset=utf-8" },
+  body: JSON.stringify({
+    name: newEntry.name,
+    attending: newEntry.attending,
+    message: newEntry.message
+  })
+}).catch(() => {});
         const updated = [newEntry, ...entries];
         setEntries(updated);
         setPageSpreadIdx(0);
